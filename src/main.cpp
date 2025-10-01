@@ -241,6 +241,10 @@ void opcontrol() {
       pistonC.toggle();
     }
 
+   // A (MatchLoad) – momentary pulse on Piston A
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+      pistonA.toggle();
+    }
 
 		pros::delay(20);                               // Run for 20 ms then update
 	}

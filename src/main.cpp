@@ -212,22 +212,22 @@ void opcontrol() {
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
       // R1 – Intake into basket
       // 11W: CCW | Half1: CCW | Half2: CW | Piston A: OUT | Piston B: IN
-      runIntake(+1, +1, -1, 100);
+      runIntake(+1, +1, 1, 100);
       setPistons(/*A OUT*/ true, /*B OUT*/ false);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
       // R2 – Intake out top goal
       // 11W: CCW | Half1: CCW | Half2: CW | Piston A: IN | Piston B: OUT
-      runIntake(+1, +1, -1, 100);
+      runIntake(+1, +1, 1, 100);
       setPistons(false, true);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
       // L1 – Intake out middle goal
       // 11W: CCW | Half1: CW | Half2: CW | Piston B: OUT (A stays IN)
-      runIntake(+1, -1, -1, 100);
+      runIntake(+1, -1, 1, 100);
       setPistons(false, true);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
       // L2 – Outtake
       // 11W: CW | Half1: CW | Half2: CCW | Piston B: OUT (A stays IN)
-      runIntake(-1, -1, +1, 100);
+      runIntake(-1, -1, -1, 100);
       setPistons(false, true);
     } else {
       // No button pressed – stop the intake (pistons hold last state)

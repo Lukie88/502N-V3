@@ -182,9 +182,7 @@ void autonomous() {}
  */
 void opcontrol() {
     
-  // auto db01 = [](double v, double db = 0.05) {
-  // return (std::fabs(v) < db) ? 0.0 : v; // small deadband to stop creeping
-  // };
+
 	
 	while (true) {
 
@@ -193,21 +191,6 @@ void opcontrol() {
       // move the robot
       chassis.arcade(rightX, leftY);
 
-      // delay to save resources
-      pros::delay(25);
-// Axis 3 (LEFT_Y) = forward/back  |  Axis 1 (RIGHT_X) = turn left/right
-  //   double throttle = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)  / 127.0; // Axis 3
-  //   double turn     = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X) / 127.0; // Axis 1
-    
-
-  // throttle = db01(-throttle);
-  //   turn     = db01(-turn);
-
-  //   // Allow in-place turning when you're not pushing forward/back
-  //   bool quickTurn = std::fabs(throttle) < 0.10 && std::fabs(turn) > 0.05;
-
-  //   // If your LemLib has a 3-arg curvature, use this:
-  //   chassis.curvature(throttle, turn, quickTurn);
 
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
       // R1 – Intake into basket

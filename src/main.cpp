@@ -49,15 +49,15 @@ inline void pulseMatchLoad(int ms = 200) {
     pistonC.retract();
 }
 // Inertials
-pros::Imu imu_sensor(12);
-// horizontal tracking wheel encoder
-pros::Rotation horizontal_encoder(20);
-// vertical tracking wheel encoder
-pros::adi::Encoder vertical_encoder('F', 'G', true);
+pros::Imu imu_sensor(15);
+// horizontal tracking wheel rotational sensor
+pros::Rotation horizontal_sensor(13);
+// vertical tracking wheel rotational sensor
+pros::Rotation vertical_sensor(16);
 // horizontal tracking wheel
-lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_275, -5.75);
+lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_sensor, lemlib::Omniwheel::NEW_275_HALF, -5.75);
 // vertical tracking wheel
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_275, -2.5);
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_sensor, lemlib::Omniwheel::NEW_275_HALF, -2.5);
 
 //Odometries
 lemlib::OdomSensors sensors(&vertical_tracking_wheel, // vertical tracking wheel 1, set to null
@@ -121,21 +121,14 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize(); // initialize the brain screen
-	chassis.calibrate(); // calibrate sensors
-
-	//print position to brain screen
-	pros::Task screen_task([&]() {
-		while (true) {
-		auto p = chassis.getPose();
-		pros::lcd::print(0, "X: %.2f", p.x);
-		pros::lcd::print(1, "Y: %.2f", p.y);
-		pros::lcd::print(2, "Theta: %.2f", p.theta);
-			pros::delay(20); // update every 100 ms
-		}
-	});
+	pros::lcd::initialize(); // initialize brain screen
+    while (true) { // infinite loop
+        // print measurements from the rotation sensor
+        pros::lcd::print(1, "Rotation Sensor: %i", horizontal_sensor.get_position());
+        pros::lcd::print(2, "Rotation Sensor: %i", vertical_sensor.get_position());
+        pros::delay(10); // delay to save resources. DO NOT REMOVE
 }
-
+}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When

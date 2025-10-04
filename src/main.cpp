@@ -14,9 +14,9 @@ pros::MotorGroup right_mg({10, 5, -6}, pros::MotorGearset::blue);  // Creates a 
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&left_mg, // left motor group
                               &right_mg, // right motor group
-                              10, // 10 inch track width
-                              lemlib::Omniwheel::NEW_4, // using new 4" omnis
-                              360, // drivetrain rpm is 360
+                              10.5, // 10.5 inch track width
+                              lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
+                              450, // drivetrain rpm is 450
                               2 // horizontal drift is 2 (for now)
 );
 
@@ -206,12 +206,12 @@ void opcontrol() {
       // L1 – Intake out middle goal
       // 11W: CCW | Half1: CW | Half2: CW | Piston B: OUT (A stays IN)
       runIntake(+1, -1, 1, 100);
-      setPistons(false, true);
+      setPistons(true, true);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
       // L2 – Outtake
       // 11W: CW | Half1: CW | Half2: CCW | Piston B: OUT (A stays IN)
       runIntake(-1, -1, -1, 100);
-      setPistons(false, true);
+      setPistons(true, true);
     } else {
       // No button pressed – stop the intake (pistons hold last state)
       intakeMain.move(0);

@@ -51,9 +51,9 @@ inline void pulseMatchLoad(int ms = 200) {
 // Inertials
 pros::Imu imu_sensor(15);
 // horizontal tracking wheel rotational sensor
-pros::Rotation horizontal_sensor(13);
+pros::Rotation horizontal_sensor(-13);
 // vertical tracking wheel rotational sensor
-pros::Rotation vertical_sensor(16);
+pros::Rotation vertical_sensor(-16);
 // horizontal tracking wheel
 lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_sensor, lemlib::Omniwheel::NEW_275_HALF, -5.75);
 // vertical tracking wheel
@@ -122,13 +122,15 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize(); // initialize brain screen
-    while (true) { // infinite loop
-        // print measurements from the rotation sensor
-        pros::lcd::print(1, "Rotation Sensor: %i", horizontal_sensor.get_position());
-        pros::lcd::print(2, "Rotation Sensor: %i", vertical_sensor.get_position());
-        pros::delay(10); // delay to save resources. DO NOT REMOVE
+  chassis.calibrate(); // calibrate sensors
+
+  //   Note: initialize() must return quickly so other modes can run.
+  // or print in opcontrol(). For now, do a one-time print and return.
+  pros::lcd::print(1, "H rot: %d", horizontal_sensor.get_position());
+  pros::lcd::print(2, "V rot: %d", vertical_sensor.get_position());
+  pros::delay(20); // update every 20 ms
 }
-}
+
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -175,14 +177,12 @@ void autonomous() {}
  */
 void opcontrol() {
     
-
-	
 	while (true) {
 
   int leftY = -controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
   int rightX = -controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
       // move the robot
-      chassis.arcade(rightX, leftY);
+  chassis.arcade(rightX, leftY);
 
 
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {

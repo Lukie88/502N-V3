@@ -7,9 +7,13 @@
 // controler
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-//motor groups
-pros::MotorGroup left_mg({1, -2, 3}, pros::MotorGearset::blue);    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
-pros::MotorGroup right_mg({10, 5, -6}, pros::MotorGearset::blue);  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
+// motor groups
+// Ensure positive power drives the robot forward on BOTH sides.
+// Left side: ports 1 and 3 forward, port 2 reversed
+pros::MotorGroup left_mg({1, -2, 3}, pros::MotorGearset::blue);
+// Right side: mirror orientation — reverse the whole side unless a motor is physically flipped.
+// Here we reverse ports 10 and 5, and keep 6 forward (adjust per your physical build if needed).
+pros::MotorGroup right_mg({-10, -5, 6}, pros::MotorGearset::blue);
 
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&left_mg, // left motor group
@@ -82,7 +86,7 @@ lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
 // angular PID controller
 lemlib::ControllerSettings angular_controller(2, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              10, // derivative gain (kD)
+                                              100, // derivative gain (kD)
                                               0, // anti windup
                                               0, // small error range, in degrees
                                               0, // small error range timeout, in milliseconds
@@ -124,10 +128,6 @@ void initialize() {
 	pros::lcd::initialize(); // initialize brain screen
   chassis.calibrate(); // calibrate sensors
 
-  //   Note: initialize() must return quickly so other modes can run.
-  // or print in opcontrol(). For now, do a one-time print and return.
-  pros::lcd::print(1, "H rot: %d", horizontal_sensor.get_position());
-  pros::lcd::print(2, "V rot: %d", vertical_sensor.get_position());
   pros::delay(20); // update every 20 ms
 }
 
@@ -189,7 +189,7 @@ void opcontrol() {
   int leftY = -controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
   int rightX = -controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
       // move the robot
-  chassis.arcade(rightX, leftY);
+  chassis.arcade(leftY, rightX);
 
 
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
@@ -210,7 +210,7 @@ void opcontrol() {
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
       // L2 – Outtake
       // 11W: CW | Half1: CW | Half2: CCW | Piston B: OUT (A stays IN)
-      runIntake(-1, -1, -1, 100);
+      runIntake(-1, -1, 1, 100);
       setPistons(true, true);
     } else {
       // No button pressed – stop the intake (pistons hold last state)
@@ -218,7 +218,7 @@ void opcontrol() {
       intakeHalf1.move(0);
       intakeHalf2.move(0);
     }
-
+// reverse intake half 2
     // A (MatchLoad) – momentary pulse on Piston C
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
       pistonC.toggle();

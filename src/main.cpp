@@ -1,4 +1,4 @@
-#include "main.h"
+﻿#include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "pros/abstract_motor.hpp"
 #include "pros/misc.h"
@@ -11,7 +11,7 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 // Ensure positive power drives the robot forward on BOTH sides.
 // Left side: ports 1 and 3 forward, port 2 reversed
 pros::MotorGroup left_mg({1, -2, 3}, pros::MotorGearset::blue);
-// Right side: mirror orientation — reverse the whole side unless a motor is physically flipped.
+// Right side: mirror orientation â€” reverse the whole side unless a motor is physically flipped.
 // Here we reverse ports 10 and 5, and keep 6 forward (adjust per your physical build if needed).
 pros::MotorGroup right_mg({-10, -5, 6}, pros::MotorGearset::blue);
 
@@ -25,9 +25,9 @@ lemlib::Drivetrain drivetrain(&left_mg, // left motor group
 );
 
 // --- Intake motors ---
-// reversed from the start (no extra calls needed)
-pros::Motor intakeMain(-7, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
-pros::Motor intakeHalf1(-8, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+// main intake now on port 8 (reversed), half intake moved to port 7 (same direction as before)
+pros::Motor intakeMain(8, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+pros::Motor intakeHalf1(-7, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
 pros::Motor intakeHalf2(-9, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
 
 // --- NEW: Pneumatics ---
@@ -84,9 +84,9 @@ lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
 );
 
 // angular PID controller
-lemlib::ControllerSettings angular_controller(2, // proportional gain (kP)
+lemlib::ControllerSettings angular_controller(1, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              100, // derivative gain (kD)
+                                              10, // derivative gain (kD)
                                               0, // anti windup
                                               0, // small error range, in degrees
                                               0, // small error range timeout, in milliseconds
@@ -127,6 +127,14 @@ void on_center_button() {
 void initialize() {
 	pros::lcd::initialize(); // initialize brain screen
   chassis.calibrate(); // calibrate sensors
+
+  // Reduce drift after movements by applying motor braking (per-motor)  
+  pros::Motor(1).set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+  pros::Motor(2).set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+  pros::Motor(3).set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+  pros::Motor(10).set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+  pros::Motor(5).set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+  pros::Motor(6).set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 
   pros::delay(20); // update every 20 ms
 }
@@ -193,38 +201,38 @@ void opcontrol() {
 
 
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-      // R1 – Intake into basket
+      // R1 â€“ Intake into basket
       // 11W: CCW | Half1: CCW | Half2: CW | Piston A: OUT | Piston B: IN
-      runIntake(+1, +1, 1, 100);
+      runIntake(+1, +1, 1, 127);
       setPistons(/*A OUT*/ true, /*B OUT*/ false);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-      // R2 – Intake out top goal
+      // R2 â€“ Intake out top goal
       // 11W: CCW | Half1: CCW | Half2: CW | Piston A: IN | Piston B: OUT
-      runIntake(+1, +1, 1, 100);
+      runIntake(+1, +1, 1, 127);
       setPistons(false, true);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-      // L1 – Intake out middle goal
+      // L1 â€“ Intake out middle goal
       // 11W: CCW | Half1: CW | Half2: CW | Piston B: OUT (A stays IN)
-      runIntake(+1, -1, 1, 100);
+      runIntake(+1, -1, 1, 127);
       setPistons(true, true);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-      // L2 – Outtake
+      // L2 â€“ Outtake
       // 11W: CW | Half1: CW | Half2: CCW | Piston B: OUT (A stays IN)
-      runIntake(-1, -1, 1, 100);
+      runIntake(-1, 1, 1, 127);
       setPistons(true, true);
     } else {
-      // No button pressed – stop the intake (pistons hold last state)
+      // No button pressed â€“ stop the intake (pistons hold last state)
       intakeMain.move(0);
       intakeHalf1.move(0);
       intakeHalf2.move(0);
     }
 // reverse intake half 2
-    // A (MatchLoad) – momentary pulse on Piston C
+    // A (MatchLoad) â€“ momentary pulse on Piston C
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
       pistonC.toggle();
     }
 
-   // A (MatchLoad) – momentary pulse on Piston A
+   // A (MatchLoad) â€“ momentary pulse on Piston A
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
       pistonA.toggle();
     }
@@ -232,3 +240,8 @@ void opcontrol() {
 		pros::delay(20);                               // Run for 20 ms then update
 	}
 }
+
+
+
+
+

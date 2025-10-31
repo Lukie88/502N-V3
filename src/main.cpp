@@ -24,29 +24,19 @@ lemlib::Drivetrain drivetrain(&left_mg, // left motor group
                               2 // horizontal drift is 2 (for now)
 );
 
-// --- Intake motors ---
-// main intake now on port 8 (reversed), half intake moved to port 7 (same direction as before)
+// --- Intake motors (renamed by role in comments) ---
+// 11W main intake
 pros::Motor intakeMain(8, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+// Body 5.5W (formerly half intake 1)
 pros::Motor intakeHalf1(-7, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+// Scoring 5.5W (formerly half intake 2)
 pros::Motor intakeHalf2(-9, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
 
-// --- NEW: Pneumatics ---
-// false = start retracted (IN). Change the second arg if you want a different default at boot.
-pros::adi::Pneumatics pistonA('B', false);
-pros::adi::Pneumatics pistonB('C', false);
-pros::adi::Pneumatics pistonC('A', false); // match-load pusher
+// --- Keep ONLY the A-button mechanism (downward actuator) ---
+pros::adi::Pneumatics pistonC('A', false); // match-load / downward mechanism
 
-// Helper to spin the intake in a custom pattern
-static void runIntake(int mainDir, int half1Dir, int half2Dir, int speed = 127) {
-    intakeMain.move(speed * mainDir);
-    intakeHalf1.move(speed * half1Dir);
-    intakeHalf2.move(speed * half2Dir);
-}
-// --- NEW: Pneumatics helpers ---
-inline void setPistons(bool aOut, bool bOut) {
-    if (aOut) pistonA.extend(); else pistonA.retract();
-    if (bOut) pistonB.extend(); else pistonB.retract();
-}
+
+
 inline void pulseMatchLoad(int ms = 200) {
     pistonC.extend();
     pros::delay(ms);
@@ -128,14 +118,6 @@ void initialize() {
 	pros::lcd::initialize(); // initialize brain screen
   chassis.calibrate(); // calibrate sensors
 
-  // Reduce drift after movements by applying motor braking (per-motor)  
-  pros::Motor(1).set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-  pros::Motor(2).set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-  pros::Motor(3).set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-  pros::Motor(10).set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-  pros::Motor(5).set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-  pros::Motor(6).set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-
   pros::delay(20); // update every 20 ms
 }
 
@@ -191,7 +173,15 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-    
+
+// Logical direction helpers (flip signs here if any motor spins opposite in real life)
+	constexpr int DIR_11W_CCW     = +1;
+	constexpr int DIR_11W_CW      = -1;
+	constexpr int DIR_BODY_CCW    = +1;
+	constexpr int DIR_BODY_CW     = -1;
+	constexpr int DIR_SCORE_CW    = +1;
+	constexpr int DIR_SCORE_CCW   = -1;
+
 	while (true) {
 
   int leftY = -controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
@@ -199,49 +189,44 @@ void opcontrol() {
       // move the robot
   chassis.arcade(leftY, rightX);
 
-
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-      // R1 â€“ Intake into basket
-      // 11W: CCW | Half1: CCW | Half2: CW | Piston A: OUT | Piston B: IN
-      runIntake(+1, +1, 1, 127);
-      setPistons(/*A OUT*/ true, /*B OUT*/ false);
+  // Intake mappings
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+      // R1 → Intake (No Scoring)
+      // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: Coast
+      intakeMain.move(127 * DIR_11W_CCW);
+      intakeHalf1.move(127 * DIR_BODY_CW);
+      intakeHalf2.move(0);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-      // R2 â€“ Intake out top goal
-      // 11W: CCW | Half1: CCW | Half2: CW | Piston A: IN | Piston B: OUT
-      runIntake(+1, +1, 1, 127);
-      setPistons(false, true);
+      // R2 → Intake (Top Scoring)
+      // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CCW
+      intakeMain.move(127 * DIR_11W_CCW);
+      intakeHalf1.move(127 * DIR_BODY_CW);
+      intakeHalf2.move(127 * DIR_SCORE_CCW);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-      // L1 â€“ Intake out middle goal
-      // 11W: CCW | Half1: CW | Half2: CW | Piston B: OUT (A stays IN)
-      runIntake(+1, -1, 1, 127);
-      setPistons(true, true);
+      // L1 → Intake (Middle Scoring)
+      // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CW
+      intakeMain.move(127 * DIR_11W_CCW);
+      intakeHalf1.move(127 * DIR_BODY_CW);
+      intakeHalf2.move(127 * DIR_SCORE_CW);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-      // L2 â€“ Outtake
-      // 11W: CW | Half1: CW | Half2: CCW | Piston B: OUT (A stays IN)
-      runIntake(-1, 1, 1, 127);
-      setPistons(true, true);
+      // L2 → Outtake
+      // 11W: CW | Body 5.5W: CCW | Scoring 5.5W: CCW
+      intakeMain.move(127 * DIR_11W_CW);
+      intakeHalf1.move(127 * DIR_BODY_CCW);
+      intakeHalf2.move(127 * DIR_SCORE_CCW);
     } else {
-      // No button pressed â€“ stop the intake (pistons hold last state)
+      // No intake buttons — stop all three
       intakeMain.move(0);
       intakeHalf1.move(0);
       intakeHalf2.move(0);
     }
-// reverse intake half 2
-    // A (MatchLoad) â€“ momentary pulse on Piston C
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-      pistonC.toggle();
-    }
 
-   // A (MatchLoad) â€“ momentary pulse on Piston A
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-      pistonA.toggle();
-    }
+// A button — momentary pulse on Piston C (match load)
+if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+  pulseMatchLoad(); // extends, waits ms, retracts
+}
 
-		pros::delay(20);                               // Run for 20 ms then update
-	}
 }
 
 
-
-
-
+}

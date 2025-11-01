@@ -193,22 +193,22 @@ void opcontrol() {
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
       // R1 → Intake (No Scoring)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: Coast
-      intakeMain.move(127 * DIR_11W_CCW);
-      intakeHalf1.move(127 * DIR_BODY_CW);
-      intakeHalf2.move(0);
-    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+      intakeMain.move(127 * DIR_11W_CW);
+      intakeHalf2.move(127 * DIR_BODY_CW);
+      intakeHalf1.move(0);
+    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
       // R2 → Intake (Top Scoring)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CCW
       intakeMain.move(127 * DIR_11W_CCW);
       intakeHalf1.move(127 * DIR_BODY_CW);
-      intakeHalf2.move(127 * DIR_SCORE_CCW);
+      intakeHalf2.move(127 * DIR_SCORE_CW);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
       // L1 → Intake (Middle Scoring)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CW
-      intakeMain.move(127 * DIR_11W_CCW);
+      intakeMain.move(127 * DIR_11W_CW);
       intakeHalf1.move(127 * DIR_BODY_CW);
-      intakeHalf2.move(127 * DIR_SCORE_CW);
-    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+      intakeHalf2.move(127 * DIR_SCORE_CCW);
+    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
       // L2 → Outtake
       // 11W: CW | Body 5.5W: CCW | Scoring 5.5W: CCW
       intakeMain.move(127 * DIR_11W_CW);

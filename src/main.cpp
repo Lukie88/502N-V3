@@ -10,10 +10,10 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 // motor groups
 // Ensure positive power drives the robot forward on BOTH sides.
 // Left side: ports 1 and 3 forward, port 2 reversed
-pros::MotorGroup left_mg({1, -2, 3}, pros::MotorGearset::blue);
+pros::MotorGroup left_mg({1, -5, -3}, pros::MotorGearset::blue);
 // Right side: mirror orientation â€” reverse the whole side unless a motor is physically flipped.
 // Here we reverse ports 10 and 5, and keep 6 forward (adjust per your physical build if needed).
-pros::MotorGroup right_mg({-10, -5, 6}, pros::MotorGearset::blue);
+pros::MotorGroup right_mg({-19, 18, 17}, pros::MotorGearset::blue);
 
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&left_mg, // left motor group
@@ -40,7 +40,7 @@ pros::adi::Pneumatics pistonC('A', false); // match-load / downward mechanism
 inline void pulseMatchLoad(int ms = 200) {
     pistonC.extend();
     pros::delay(ms);
-    pistonC.retract();
+    
 }
 // Inertials
 pros::Imu imu_sensor(15);
@@ -184,8 +184,8 @@ void opcontrol() {
 
 	while (true) {
 
-  int leftY = -controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-  int rightX = -controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+  int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+  int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
       // move the robot
   chassis.arcade(leftY, rightX);
 

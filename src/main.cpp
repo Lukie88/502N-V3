@@ -29,7 +29,7 @@ void on_center_button() {
 void initialize() {
 	pros::lcd::initialize(); // initialize brain screen
   chassis.calibrate(); // calibrate sensors
-  pistonC.retract();
+  pistonA.retract();
   pros::delay(20); // update every 20 ms
 }
 
@@ -84,15 +84,14 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+void intakefunc(int speedmain,int speedhalf1,int speedhalf2) {
+  intakeMain.move_velocity(speedmain);
+  intakeHalf1.move_velocity(speedhalf1);
+  intakeHalf2.move_velocity(speedhalf2);
+}
 void opcontrol() {
 
-// Logical direction helpers (flip signs here if any motor spins opposite in real life)
-	constexpr int DIR_11W_CCW     = +1;
-	constexpr int DIR_11W_CW      = -1;
-	constexpr int DIR_BODY_CCW    = +1;
-	constexpr int DIR_BODY_CW     = -1;
-	constexpr int DIR_SCORE_CW    = +1;
-	constexpr int DIR_SCORE_CCW   = -1;
 
 	while (true) {
 
@@ -105,37 +104,26 @@ void opcontrol() {
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
       // R1 → Intake (No Scoring)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: Coast
-      intakeMain.move(127 * DIR_11W_CW);
-      intakeHalf2.move(127 * DIR_BODY_CW);
-      intakeHalf1.move(0);
+      intakefunc(-600,-600,0);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
       // R2 → Intake (Top Scoring)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CCW
-      intakeMain.move(127 * DIR_11W_CCW);
-      intakeHalf1.move(127 * DIR_BODY_CW);
-      intakeHalf2.move(127 * DIR_SCORE_CW);
+      intakefunc(600,-600,600);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
       // L1 → Intake (Middle Scoring)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CW
-      intakeMain.move(127 * DIR_11W_CW);
-      intakeHalf1.move(127 * DIR_BODY_CW);
-      intakeHalf2.move(127 * DIR_SCORE_CCW);
+      intakefunc(-600,-600,-600);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
       // L2 → Outtake
       // 11W: CW | Body 5.5W: CCW | Scoring 5.5W: CCW
-      intakeMain.move(127 * DIR_11W_CW);
-      intakeHalf1.move(127 * DIR_BODY_CCW);
-      intakeHalf2.move(127 * DIR_SCORE_CCW);
+      intakefunc(-600,600,-600);
     } else {
       // No intake buttons — stop all three
-      intakeMain.move(0);
-      intakeHalf1.move(0);
-      intakeHalf2.move(0);
+      intakefunc(0,0,0);
     }
 
 // A button — momentary pulse on Piston C (match load)
 if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
- pistonC.toggle();}
- 
+ pistonA.toggle();}
 }
 }

@@ -28,7 +28,7 @@ inline pros::Motor intakeHalf2(-9, pros::v5::MotorGears::blue, pros::v5::MotorUn
 
 
 // --- Keep ONLY the A-button mechanism (downward actuator) ---
-inline pros::adi::Pneumatics pistonC('A', false); // match-load / downward mechanism
+inline pros::adi::Pneumatics pistonA('A', false); // match-load / downward mechanism
 
 
 

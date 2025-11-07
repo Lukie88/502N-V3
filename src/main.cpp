@@ -8,11 +8,7 @@
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // motor groups
-// Ensure positive power drives the robot forward on BOTH sides.
-// Left side: ports 1 and 3 forward, port 2 reversed
 pros::MotorGroup left_mg({1, -5, -3}, pros::MotorGearset::blue);
-// Right side: mirror orientation â€” reverse the whole side unless a motor is physically flipped.
-// Here we reverse ports 10 and 5, and keep 6 forward (adjust per your physical build if needed).
 pros::MotorGroup right_mg({-19, 18, 17}, pros::MotorGearset::blue);
 
 // drivetrain settings
@@ -37,11 +33,8 @@ pros::adi::Pneumatics pistonC('A', false); // match-load / downward mechanism
 
 
 
-inline void pulseMatchLoad(int ms = 200) {
-    pistonC.extend();
-    pros::delay(ms);
-    
-}
+bool pistonCExtended = false;
+
 // Inertials
 pros::Imu imu_sensor(15);
 // horizontal tracking wheel rotational sensor
@@ -117,7 +110,8 @@ void on_center_button() {
 void initialize() {
 	pros::lcd::initialize(); // initialize brain screen
   chassis.calibrate(); // calibrate sensors
-
+  pistonC.retract();
+  pistonCExtended = false;
   pros::delay(20); // update every 20 ms
 }
 
@@ -223,7 +217,9 @@ void opcontrol() {
 
 // A button — momentary pulse on Piston C (match load)
 if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-  pulseMatchLoad(); // extends, waits ms, retracts
+ pistonCExtended = !pistonCExtended;
+  if (pistonCExtended) pistonC.extend();
+  else                 pistonC.retract();
 }
 
 }

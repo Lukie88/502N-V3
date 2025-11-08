@@ -100,19 +100,19 @@ void opcontrol() {
   chassis.arcade(leftY, rightX);
 
   // Intake mappings
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+  if (controller.get_digital(DIGITAL_R1)) {
       // R1 → Intake (No Scoring)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: Coast
       intakefunc(-600,0,-600);
-    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+    } else if (controller.get_digital(DIGITAL_Y)) {
       // Y → Intake (Outake)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CCW
       intakefunc(600,-600,600);
-    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+    } else if (controller.get_digital(DIGITAL_L1)) {
       // L1 → Intake (Middle Scoring)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CW
       intakefunc(-600,-600,-600);
-    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+    } else if (controller.get_digital(DIGITAL_R2)) {
       // R2 → Intake (Score-High)
       // 11W: CW | Body 5.5W: CCW | Scoring 5.5W: CCW
       intakefunc(-600,600,-600);
@@ -122,10 +122,10 @@ void opcontrol() {
     }
 
 // A button — momentary pulse on Piston C (match load)
-if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+if (controller.get_digital_new_press(DIGITAL_RIGHT)) {
  pistonload.toggle();}
 
- if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+ if (controller.get_digital_new_press(DIGITAL_L2)) {
  pistonWing.toggle();}
 }
 

@@ -28,8 +28,9 @@ inline pros::Motor intakeHalf2(-9, pros::v5::MotorGears::blue, pros::v5::MotorUn
 
 
 // --- Keep ONLY the A-button mechanism (downward actuator) ---
-inline pros::adi::Pneumatics pistonA('A', false); // match-load / downward mechanism
-
+inline pros::adi::Pneumatics pistonload('A', false); // match-load / downward mechanism
+// Wing Mechanism- Button L2
+inline pros::adi::Pneumatics pistonWing('B', false); // match-load / downward mechanism
 
 
 // Inertial Sensor

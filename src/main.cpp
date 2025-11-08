@@ -29,7 +29,6 @@ void on_center_button() {
 void initialize() {
 	pros::lcd::initialize(); // initialize brain screen
   chassis.calibrate(); // calibrate sensors
-  pistonA.retract();
   pros::delay(20); // update every 20 ms
 }
 
@@ -124,8 +123,12 @@ void opcontrol() {
 
 // A button — momentary pulse on Piston C (match load)
 if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
- pistonA.toggle();}
+ pistonload.toggle();}
+
+ if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+ pistonWing.toggle();}
 }
+
 }
 
 // L2 wing descore

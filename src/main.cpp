@@ -103,9 +103,9 @@ void opcontrol() {
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
       // R1 → Intake (No Scoring)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: Coast
-      intakefunc(-600,-600,0);
+      intakefunc(-600,0,-600);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
-      // R2 → Intake (Top Scoring)
+      // Y → Intake (Outake)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CCW
       intakefunc(600,-600,600);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
@@ -113,7 +113,7 @@ void opcontrol() {
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CW
       intakefunc(-600,-600,-600);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-      // L2 → Outtake
+      // R2 → Intake (Score-High)
       // 11W: CW | Body 5.5W: CCW | Scoring 5.5W: CCW
       intakefunc(-600,600,-600);
     } else {

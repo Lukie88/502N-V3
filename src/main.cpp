@@ -105,7 +105,7 @@ void opcontrol() {
       // R1 → Intake (No Scoring)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: Coast
       intakefunc(-600,-600,0);
-    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
       // R2 → Intake (Top Scoring)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CCW
       intakefunc(600,-600,600);
@@ -123,7 +123,9 @@ void opcontrol() {
     }
 
 // A button — momentary pulse on Piston C (match load)
-if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
  pistonA.toggle();}
 }
 }
+
+// L2 wing descore

@@ -107,15 +107,15 @@ void opcontrol() {
     } else if (controller.get_digital(DIGITAL_Y)) {
       // Y → Intake (Outake)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CCW
-      intakefunc(600,-600,600);
+      intakefunc(600,600,600);
     } else if (controller.get_digital(DIGITAL_L1)) {
       // L1 → Intake (Middle Scoring)
       // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CW
-      intakefunc(-600,-600,-600);
+      intakefunc(-600,600,-600);
     } else if (controller.get_digital(DIGITAL_R2)) {
       // R2 → Intake (Score-High)
       // 11W: CW | Body 5.5W: CCW | Scoring 5.5W: CCW
-      intakefunc(-600,600,-600);
+      intakefunc(-600,-600,-600);
     } else {
       // No intake buttons — stop all three
       intakefunc(0,0,0);

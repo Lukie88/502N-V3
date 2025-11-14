@@ -1,24 +1,11 @@
 // src/auton_utils.cpp
 #include "auton_select.hpp"
+#include "auton_routines.hpp"  
 
 
 namespace auton {
 
 namespace {
-
-// DECLARE YOUR AUTON ROUTINES
-// Declare- Define them later in some other .cpp file
-
-void red_1(lemlib::Chassis& chassis);
-void red_2(lemlib::Chassis& chassis);
-void red_3(lemlib::Chassis& chassis);
-void blue_1(lemlib::Chassis& chassis);
-void blue_2(lemlib::Chassis& chassis);
-void blue_3(lemlib::Chassis& chassis);
-
-void skills_auton_routine(lemlib::Chassis& chassis);
-void skills_driving_routine(lemlib::Chassis& chassis); // what the nig
-
 
 // GAME AUTON TABLE
 

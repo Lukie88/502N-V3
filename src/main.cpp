@@ -4,6 +4,7 @@
 #include "pros/misc.h"
 #include "pros/adi.hpp"
 #include "auton_select.hpp"
+#include "Main_Drive.hpp"
 
 /**
  * A callback function for LLEMU's center button.
@@ -102,10 +103,13 @@ void opcontrol() {
 
 	while (true) {
 
-  int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-  int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-      // move the robot
-  chassis.arcade(leftY, rightX);
+ int forward = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+int turn    = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+
+  // --- Curvatherp drive ---
+  DriveOutput driveOut = calc_curvatherp(forward, turn);
+  left_mg.move(static_cast<int>(driveOut.left));
+  right_mg.move(static_cast<int>(driveOut.right));
 
   // Intake mappings
   if (controller.get_digital(DIGITAL_R1)) {

@@ -84,10 +84,10 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 
-void intakefunc(int speedmain,int speedhalf1,int speedhalf2) {
+void intakefunc(int speedmain,int speedscore,int speedmid) {
   intakeMain.move_velocity(speedmain);
-  intakeHalf1.move_velocity(speedhalf1);
-  intakeHalf2.move_velocity(speedhalf2);
+  intakescore.move_velocity(speedscore);
+  intakemid.move_velocity(speedmid);
 }
 void opcontrol() {
 
@@ -101,20 +101,16 @@ void opcontrol() {
 
   // Intake mappings
   if (controller.get_digital(DIGITAL_R1)) {
-      // R1 → Intake (No Scoring)
-      // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: Coast
+      // R1 → Intake (Just Storing)
       intakefunc(-600,0,-600);
     } else if (controller.get_digital(DIGITAL_Y)) {
-      // Y → Intake (Outake)
-      // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CCW
+      // Y → Outake
       intakefunc(600,600,600);
     } else if (controller.get_digital(DIGITAL_L1)) {
-      // L1 → Intake (Middle Scoring)
-      // 11W: CCW | Body 5.5W: CW | Scoring 5.5W: CW
+      // L1 → Intake + Middle Goal Scoring
       intakefunc(-600,600,-600);
     } else if (controller.get_digital(DIGITAL_R2)) {
-      // R2 → Intake (Score-High)
-      // 11W: CW | Body 5.5W: CCW | Scoring 5.5W: CCW
+      // R2 → Intake + High Goal Scoring
       intakefunc(-600,-600,-600);
     } else {
       // No intake buttons — stop all three
@@ -131,4 +127,3 @@ if (controller.get_digital_new_press(DIGITAL_RIGHT)) {
 
 }
 
-// L2 wing descore

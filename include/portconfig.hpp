@@ -21,9 +21,9 @@ inline lemlib::Drivetrain drivetrain(&left_mg, // left motor group
 // 11W main intake
 inline pros::Motor intakeMain(8, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
 // Body 5.5W (formerly half intake 1)
-inline pros::Motor intakeHalf1(-7, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+inline pros::Motor intakescore(-7, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
 // Scoring 5.5W (formerly half intake 2)
-inline pros::Motor intakeHalf2(-9, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+inline pros::Motor intakemid(-9, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
 
 
 

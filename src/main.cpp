@@ -3,6 +3,7 @@
 #include "pros/abstract_motor.hpp"
 #include "pros/misc.h"
 #include "pros/adi.hpp"
+#include "auton_select.hpp"
 
 /**
  * A callback function for LLEMU's center button.
@@ -29,6 +30,7 @@ void on_center_button() {
 void initialize() {
 	pros::lcd::initialize(); // initialize brain screen
   chassis.calibrate(); // calibrate sensors
+  auton::setup_default_game_autons();
   pros::delay(20); // update every 20 ms
 }
 
@@ -48,7 +50,13 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+
+  auton::run_menu_selector();
+
+
+
+}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -123,6 +131,7 @@ if (controller.get_digital_new_press(DIGITAL_RIGHT)) {
 
  if (controller.get_digital_new_press(DIGITAL_L2)) {
  pistonWing.toggle();}
+ pros::delay(20); 
 }
 
 }

@@ -7,6 +7,7 @@
 #include "auton_select.hpp"
 #include "auton_routines.hpp"
 #include "Main_Drive.hpp"
+#include "pros/misc.hpp"
 
 void on_center_button() {
 	static bool pressed = false;
@@ -27,6 +28,7 @@ void on_center_button() {
 void initialize() {
 	pros::lcd::initialize(); // initialize brain screen
   chassis.calibrate(); // calibrate sensors
+  chassis.setPose(0,0,0); // set starting position (x, y, heading)
   pros::delay(20); // update every 20 ms
   controller.rumble(".");
 }
@@ -65,16 +67,19 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-  switch (get_selected_auto()) {
+  /*switch (get_selected_auto()) {
     case 0:auton_routes::red_1();break;
     case 1:auton_routes::red_2();break;
     case 2:auton_routes::red_3();break;
     case 3:auton_routes::blue_1();break;
     case 4:auton_routes::blue_2();break;
     case 5:auton_routes::blue_3();break;
-  }
-}
+  */
+  // chassis.turnToHeading(90, 3000);
+  //   chassis.turnToHeading(-90, 999999999);
+chassis.moveToPoint(0, 19.685, 4000); // move the chassis to (10, 10)
 
+}
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -107,6 +112,7 @@ int turn    = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
   left_mg.move(static_cast<int>(driveOut.left));
   right_mg.move(static_cast<int>(driveOut.right));
 
+  }
   // Intake mappings
   if (controller.get_digital(DIGITAL_R1)) {
       // R1 → Intake (Just Storing)

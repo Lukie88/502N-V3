@@ -43,7 +43,7 @@ void main_menu(){
         
     }
 
-}
+
 
 void clear_screen(){
     pros::screen::set_pen(pros::Color::white);

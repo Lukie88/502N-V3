@@ -18,7 +18,17 @@ void on_center_button() {
 		pros::lcd::clear_line(2);
 	}
 }
+void poseDebugTask(void*) {
+    while (true) {
+        lemlib::Pose pose = chassis.getPose(); // (x, y, heading)
 
+        pros::lcd::print(0, "X: %.2f in", pose.x);
+        pros::lcd::print(1, "Y: %.2f in", pose.y);
+        pros::lcd::print(2, "H: %.2f deg", pose.theta);
+
+        pros::delay(50); // update ~20 times/sec
+    }
+}
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -77,7 +87,20 @@ void autonomous() {
   */
   // chassis.turnToHeading(90, 3000);
   //   chassis.turnToHeading(-90, 999999999);
-chassis.moveToPoint(0, 19.685, 4000); // move the chassis to (10, 10)
+// chassis.moveToPoint(0, 40, 4000); // move the chassis to (10, 10)
+     // set position to x:0, y:0, heading:0
+    chassis.setPose(0, 0, 0);
+        pros::Task poseTask(poseDebugTask, nullptr);
+
+    // move 48" forwards
+    chassis.moveToPoint(0, 20, 2000);
+    chassis.moveToPoint(20, 20, 2000);
+    chassis.moveToPoint(20, 0, 2000);
+    chassis.moveToPose(0, 0, 0,3000);
+
+
+
+
 
 }
 /**
@@ -140,5 +163,4 @@ if (controller.get_digital_new_press(DIGITAL_RIGHT)) {
  pros::delay(20); 
 }
 
-}
 

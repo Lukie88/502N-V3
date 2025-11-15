@@ -33,6 +33,7 @@ void main_menu(){
         if (controller.get_digital_new_press(DIGITAL_RIGHT)){selected_section += 1;} if (selected_section > 3){selected_section = 0;}
         if (controller.get_digital_new_press(DIGITAL_A)){sectionselected = true;}
         if (controller.get_digital(DIGITAL_B)){clear_screen();}
+    }
         main_menu_grid();
         switch (selected_section){
             case 0: draw_hollow_rect(0,0,126,272,pros::Color::black); break;

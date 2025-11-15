@@ -29,6 +29,9 @@ void auton_menus(){
 void main_menu(){
     bool sectionselected = false;
     while (sectionselected == false){
+        if (controller.get_digital_new_press(DIGITAL_LEFT)){selected_section -= 1; if (selected_section < 0){selected_section = 3;}}
+        if (controller.get_digital_new_press(DIGITAL_RIGHT)){selected_section += 1; if (selected_section > 3){selected_section = 0;}}
+        if (controller.get_digital_new_press(DIGITAL_A)){sectionselected = true;}
         main_menu_grid();
         switch (selected_section){
             case 0: draw_hollow_rect(0,0,126,272,pros::Color::black); break;
@@ -36,9 +39,7 @@ void main_menu(){
             case 2: draw_hollow_rect(127,0,353,136,pros::Color::black); break;
             case 3: draw_hollow_rect(127,137,353,272,pros::Color::black); break;
         }
-        if (controller.get_digital_new_press(DIGITAL_LEFT)){selected_section -= 1; if (selected_section < 0){selected_section = 3;}}
-        if (controller.get_digital_new_press(DIGITAL_RIGHT)){selected_section += 1; if (selected_section > 3){selected_section = 0;}}
-        if (controller.get_digital_new_press(DIGITAL_A)){sectionselected = true;}
+        
     }
 
 }

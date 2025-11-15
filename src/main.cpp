@@ -6,12 +6,6 @@
 #include "auton_select.hpp"
 #include "Main_Drive.hpp"
 
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
 void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
@@ -40,7 +34,11 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+  auton::setup_default_game_autons();
+    auton::run_menu_selector();
+
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -52,11 +50,7 @@ void disabled() {}
  * starts.
  */
 void competition_initialize() {
-
   auton::run_menu_selector();
-
-
-
 }
 
 /**

@@ -221,7 +221,6 @@ void renderMenu() {
 // PUBLIC API IMPLEMENTATION (MATCHES HEADER) 
 
 void setup_default_game_autons() {
-    // Use the static gameAutons[] table above
     // Andrew can be smart and build dynamic setup, put array here
 }
 

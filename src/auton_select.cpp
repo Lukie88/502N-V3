@@ -71,8 +71,8 @@ void main_menu_grid(){
 
 void draw_hollow_rect(int x0, int y0, int x1, int y1, pros::Color color){
     pros::screen::set_pen(color);
-    pros::screen::fill_rect(x0,y0,x1,y0-5); //top
-    pros::screen::fill_rect(x0,y1+5,x1,y1); //bottom
-    pros::screen::fill_rect(x0,y0,x0-5,y1); //left
-    pros::screen::fill_rect(x1+5,y0,x1,y1); //right
+    pros::screen::fill_rect(x0,y0,x1,y0-25); //top
+    pros::screen::fill_rect(x0,y1+25,x1,y1); //bottom
+    pros::screen::fill_rect(x0,y0,x0-25,y1); //left
+    pros::screen::fill_rect(x1+25,y0,x1,y1); //right
 }

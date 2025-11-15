@@ -15,12 +15,14 @@ void auton_menus(){
     bool autoselected = false;
     while (autoselected == false){
         main_menu();
+        clear_screen();
         switch (selected_section){
             case 0:red_menu();break;
             case 1:blue_menu();break;
             case 2:skills_menu();break;
             case 3:driving_skills_menu();break;
         }
+
     }
 }
 
@@ -28,7 +30,6 @@ void main_menu(){
     bool sectionselected = false;
     while (sectionselected == false){
         main_menu_grid();
-        pros::screen::set_pen(pros::Color::black);
         switch (selected_section){
             case 0: draw_hollow_rect(0,0,126,272,pros::Color::slate_gray); break;
             case 1: draw_hollow_rect(354,0,480,272,pros::Color::slate_gray); break;

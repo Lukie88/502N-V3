@@ -3,7 +3,9 @@
 #include "pros/abstract_motor.hpp"
 #include "pros/misc.h"
 #include "pros/adi.hpp"
+#include "portconfig.hpp"
 #include "auton_select.hpp"
+#include "auton_routines.hpp"
 #include "Main_Drive.hpp"
 
 void on_center_button() {
@@ -25,8 +27,8 @@ void on_center_button() {
 void initialize() {
 	pros::lcd::initialize(); // initialize brain screen
   chassis.calibrate(); // calibrate sensors
-  auton::setup_default_game_autons();
   pros::delay(20); // update every 20 ms
+  controller.rumble(".");
 }
 
 /**
@@ -35,9 +37,8 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-  auton::setup_default_game_autons();
-    auton::run_menu_selector();
-
+  auton_menus();
+  if (controller.get_digital_new_press(DIGITAL_B)){auton_menus();}
 }
 
 /**
@@ -50,7 +51,6 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
-  auton::run_menu_selector();
 }
 
 /**
@@ -65,12 +65,14 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
- // set position to x:0, y:0, heading:0
-    chassis.setPose(0, 0, 0);
-    // turn to face heading 90 with a very long timeout
-    chassis.turnToHeading(90, 100000);
-
-
+  switch (get_selected_auto()) {
+    case 0:auton_routes::red_1();break;
+    case 1:auton_routes::red_2();break;
+    case 2:auton_routes::red_3();break;
+    case 3:auton_routes::blue_1();break;
+    case 4:auton_routes::blue_2();break;
+    case 5:auton_routes::blue_3();break;
+  }
 }
 
 /**

@@ -1,19 +1,20 @@
 #pragma once
 
-#include "lemlib/api.hpp"
+
+
 
 // All auton routines live in the auton namespace
-namespace auton {
+namespace auton_routes {
 
     // Game autons
-    void red_1(lemlib::Chassis& chassis);
-    void red_2(lemlib::Chassis& chassis);
-    void red_3(lemlib::Chassis& chassis);
-    void blue_1(lemlib::Chassis& chassis);
-    void blue_2(lemlib::Chassis& chassis);
-    void blue_3(lemlib::Chassis& chassis);
+    void red_1();
+    void red_2();
+    void red_3();
+    void blue_1();
+    void blue_2();
+    void blue_3();
 
     // Skills
-    void skills_auton_routine(lemlib::Chassis& chassis);
-    void skills_driving_routine(lemlib::Chassis& chassis);
+    void skills_auton_routine();
+    void skills_driving_routine();
 }

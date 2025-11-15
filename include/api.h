@@ -20,6 +20,7 @@
 #define _PROS_API_H_
 
 #ifdef __cplusplus
+#include <algorithm>
 #include <cerrno>
 #include <cmath>
 #include <cstdbool>

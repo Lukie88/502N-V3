@@ -31,10 +31,10 @@ void main_menu(){
     while (sectionselected == false){
         main_menu_grid();
         switch (selected_section){
-            case 0: draw_hollow_rect(0,0,126,272,pros::Color::slate_gray); break;
-            case 1: draw_hollow_rect(354,0,480,272,pros::Color::slate_gray); break;
-            case 2: draw_hollow_rect(127,0,353,136,pros::Color::slate_gray); break;
-            case 3: draw_hollow_rect(127,137,353,272,pros::Color::slate_gray); break;
+            case 0: draw_hollow_rect(0,0,126,272,pros::Color::black); break;
+            case 1: draw_hollow_rect(354,0,480,272,pros::Color::black); break;
+            case 2: draw_hollow_rect(127,0,353,136,pros::Color::black); break;
+            case 3: draw_hollow_rect(127,137,353,272,pros::Color::black); break;
         }
         if (controller.get_digital_new_press(DIGITAL_LEFT)){selected_section -= 1; if (selected_section < 0){selected_section = 3;}}
         if (controller.get_digital_new_press(DIGITAL_RIGHT)){selected_section += 1; if (selected_section > 3){selected_section = 0;}}
@@ -71,8 +71,8 @@ void main_menu_grid(){
 
 void draw_hollow_rect(int x0, int y0, int x1, int y1, pros::Color color){
     pros::screen::set_pen(color);
-    pros::screen::fill_rect(x0,y0,x1,y0+5); //top
-    pros::screen::fill_rect(x0,y1-5,x1,y1); //bottom
-    pros::screen::fill_rect(x0,y0,x0+5,y1); //left
-    pros::screen::fill_rect(x1-5,y0,x1,y1); //right
+    pros::screen::fill_rect(x0,y0,x1,y0-5); //top
+    pros::screen::fill_rect(x0,y1+5,x1,y1); //bottom
+    pros::screen::fill_rect(x0,y0,x0-5,y1); //left
+    pros::screen::fill_rect(x1+5,y0,x1,y1); //right
 }

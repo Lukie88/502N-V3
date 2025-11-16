@@ -29,6 +29,11 @@ void poseDebugTask(void*) {
         pros::delay(50); // update ~20 times/sec
     }
 }
+void intakefunc(int speedmain,int speedscore,int speedmid) {
+  intakeMain.move_velocity(speedmain);
+  intakescore.move_velocity(speedscore);
+  intakemid.move_velocity(speedmid);
+}
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -39,8 +44,8 @@ void initialize() {
 	pros::lcd::initialize(); // initialize brain screen
   chassis.calibrate(); // calibrate sensors
   chassis.setPose(0,0,0); // set starting position (x, y, heading)
-  pros::delay(20); // update every 20 ms
   controller.rumble(".");
+  pros::delay(20); // update every 20 ms
 }
 
 /**
@@ -49,8 +54,7 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-  auton_menus();
-  if (controller.get_digital_new_press(DIGITAL_B)){auton_menus();}
+  // a`(controller.get_digital_new_press(DIGITAL_B)){auton_menus();}
 }
 
 /**
@@ -117,11 +121,7 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 
-void intakefunc(int speedmain,int speedscore,int speedmid) {
-  intakeMain.move_velocity(speedmain);
-  intakescore.move_velocity(speedscore);
-  intakemid.move_velocity(speedmid);
-}
+
 void opcontrol() {
 
 
@@ -135,7 +135,7 @@ int turn    = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
   left_mg.move(static_cast<int>(driveOut.left));
   right_mg.move(static_cast<int>(driveOut.right));
 
-  }
+  
   // Intake mappings
   if (controller.get_digital(DIGITAL_R1)) {
       // R1 → Intake (Just Storing)
@@ -162,5 +162,5 @@ if (controller.get_digital_new_press(DIGITAL_RIGHT)) {
  pistonWing.toggle();}
  pros::delay(20); 
 }
-
+}
 

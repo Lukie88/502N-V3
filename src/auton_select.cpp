@@ -125,4 +125,6 @@ void auton_menus() {
         pros::delay(50);
     }
 
+
+    //I  want you to givem e a guide on how to create autonomous fucntions. so bacilly in the auton code when run autonomous, lets make one command for when i  run the auton commnad, itr spins the motor as it would in when i press L1
 }

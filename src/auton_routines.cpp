@@ -2,6 +2,8 @@
 #include "Main_Drive.hpp"
 #include "Portconfig.hpp"
 #include "lemlib/api.hpp"
+#include "robot_afunc.hpp"
+
 
 
 namespace auton_routes {

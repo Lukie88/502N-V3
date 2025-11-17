@@ -8,6 +8,8 @@
 #include "auton_routines.hpp"
 #include "Main_Drive.hpp"
 #include "pros/misc.hpp"
+#include "robot_afunc.hpp"
+
 
 void on_center_button() {
 	static bool pressed = false;
@@ -29,11 +31,7 @@ void poseDebugTask(void*) {
         pros::delay(50); // update ~20 times/sec
     }
 }
-void intakefunc(int speedmain,int speedscore,int speedmid) {
-  intakeMain.move_velocity(speedmain);
-  intakescore.move_velocity(speedscore);
-  intakemid.move_velocity(speedmid);
-}
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -135,23 +133,22 @@ int turn    = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
   left_mg.move(static_cast<int>(driveOut.left));
   right_mg.move(static_cast<int>(driveOut.right));
 
-  
-  // Intake mappings
+  // Intake mappings (priority order matches the requested controller layout)
   if (controller.get_digital(DIGITAL_R1)) {
       // R1 → Intake (Just Storing)
-      intakefunc(-600,0,-600);
-    } else if (controller.get_digital(DIGITAL_Y)) {
-      // Y → Outake
-      intakefunc(600,600,600);
-    } else if (controller.get_digital(DIGITAL_L1)) {
-      // L1 → Intake + Middle Goal Scoring
-      intakefunc(-600,600,-600);
+      runIntakeStore();
     } else if (controller.get_digital(DIGITAL_R2)) {
       // R2 → Intake + High Goal Scoring
-      intakefunc(-600,-600,-600);
+      scoreHighGoal();
+    } else if (controller.get_digital(DIGITAL_L1)) {
+      // L1 → Intake + Middle Goal Scoring
+      scoreMiddleGoal();
+    } else if (controller.get_digital(DIGITAL_Y)) {
+      // Y → Outake
+      runOuttake();
     } else {
       // No intake buttons — stop all three
-      intakefunc(0,0,0);
+      stopIntakes();
     }
 
 // A button — momentary pulse on Piston C (match load)

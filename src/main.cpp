@@ -8,6 +8,7 @@
 #include "auton_routines.hpp"
 #include "Main_Drive.hpp"
 #include "pros/misc.hpp"
+#include "pros/rtos.hpp"
 #include "robot_afunc.hpp"
 
 
@@ -79,29 +80,15 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-  /*switch (get_selected_auto()) {
-    case 0:auton_routes::red_1();break;
-    case 1:auton_routes::red_2();break;
-    case 2:auton_routes::red_3();break;
-    case 3:auton_routes::blue_1();break;
-    case 4:auton_routes::blue_2();break;
-    case 5:auton_routes::blue_3();break;
-  */
-  // chassis.turnToHeading(90, 3000);
-  //   chassis.turnToHeading(-90, 999999999);
-// chassis.moveToPoint(0, 40, 4000); // move the chassis to (10, 10)
-     // set position to x:0, y:0, heading:0
-    chassis.setPose(0, 0, 0);
-        pros::Task poseTask(poseDebugTask, nullptr);
 
-    // move 48" forwards
-    chassis.moveToPoint(0, 20, 2000);
-    chassis.moveToPoint(20, 20, 2000);
-    chassis.moveToPoint(20, 0, 2000);
-    chassis.moveToPose(0, 0, 0,3000);
-
-
-
+    
+chassis.setPose(-48,15,90);
+runIntakeStore();
+chassis.moveToPose(-27, 26, 70,3000,{.maxSpeed=90});
+chassis.moveToPose(-4, 45, 45,3000,{.maxSpeed =127});
+pros::delay(1500);
+setMatchLoad(true);
+chassis.moveToPose(-24, 25, 45, 1500,{.maxSpeed=-127 });
 
 
 }

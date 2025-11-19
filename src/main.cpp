@@ -81,6 +81,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
+    chassis.turnToHeading(90, 100000);
 
     
 

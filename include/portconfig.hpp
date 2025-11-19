@@ -1,5 +1,7 @@
 #include "api.h"
 #include "lemlib/api.hpp"
+#include "pros/optical.hpp"
+
 
 
 //controllers
@@ -32,6 +34,8 @@ inline pros::adi::Pneumatics pistonload('A', false); // match-load / downward me
 // Wing Mechanism- Button L2
 inline pros::adi::Pneumatics pistonWing('B', false); // match-load / downward mechanism
 
+// Optical Sensors
+inline pros::Optical sorterOptical(12);
 
 // Inertial Sensor
 inline pros::Imu imu_sensor(15);
@@ -43,7 +47,7 @@ inline pros::Rotation vertical_sensor(-16);
 // horizontal tracking wheel
 inline lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_sensor, lemlib::Omniwheel::NEW_275_HALF, 2.85);
 // vertical tracking wheel
-inline lemlib::TrackingWheel vertical_tracking_wheel(&vertical_sensor, lemlib::Omniwheel::NEW_275_HALF,0.591);
+inline lemlib::TrackingWheel vertical_tracking_wheel(&vertical_sensor, lemlib::Omniwheel::NEW_275_HALF,0.583);
 
 //Odometries
 inline lemlib::OdomSensors sensors(&vertical_tracking_wheel, // vertical tracking wheel 1, set to null

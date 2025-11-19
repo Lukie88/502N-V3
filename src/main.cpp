@@ -46,6 +46,7 @@ void initialize() {
   controller.rumble(".");
   init_sorter_sensor();
   pros::delay(20); // update every 20 ms
+  
 }
 
 /**
@@ -55,6 +56,7 @@ void initialize() {
  */
 void disabled() {
   // a`(controller.get_digital_new_press(DIGITAL_B)){auton_menus();}
+  auton_menus();
 }
 
 /**
@@ -67,6 +69,7 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
+  
 }
 
 /**
@@ -107,11 +110,11 @@ chassis.moveToPose(-65.159,46.139, 90,1500,{.forwards=false, .minSpeed=60});
 
 void opcontrol() {
 
-
+  clear_screen();
 	while (true) {
-    clear_screen();
- int forward = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-int turn    = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+    
+  int forward = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+  int turn    = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
   // --- Curvatherp drive ---
   DriveOutput driveOut = calc_curvatherp(forward, turn);
@@ -123,7 +126,10 @@ int turn    = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
       cycle_sorter_alliance();
       controller.print(0, 0, "Clr:%-4s", sorter_alliance_name(get_sorter_alliance()));
   }
-
+  if (controller.get_digital(DIGITAL_UP)
+      && controller.get_digital(DIGITAL_DOWN)) {
+        disabled();
+  }
   if (controller.get_digital_new_press(DIGITAL_B)) {
       toggle_sorter_enabled();
       controller.print(1, 0, "Sort:%s ", sorterEnabled ? "ON" : "OFF");

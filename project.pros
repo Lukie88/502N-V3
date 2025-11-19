@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "502N V3",
+    "project_name": "502N V3 - Andrew_edition",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -635,8 +635,8 @@
       }
     },
     "upload_options": {
-      "icon": "X",
-      "slot": 1
+      "icon": "power",
+      "slot": 3
     },
     "use_early_access": false
   }

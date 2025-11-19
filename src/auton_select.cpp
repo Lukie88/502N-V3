@@ -11,7 +11,7 @@ short int selected_section = 0;   // 0 = red, 1 = blue, 2 = skills, 3 = driving 
 
 int get_selected_auto() { return selected_auto; }
 
-// Clear entire Brain screen to white
+// // Clear entire Brain screen to white
 void clear_screen() {
     pros::screen::set_pen(pros::Color::white);
     pros::screen::fill_rect(0, 0, 480, 272);
@@ -109,17 +109,13 @@ void auton_menus() {
         // Draw a highlight box around the currently selected section
         switch (selected_section) {
             case 0: // Red (left)
-                draw_hollow_rect(0,   0,   126, 272, pros::Color::black);
-                break;
+                draw_hollow_rect(0,0,126,    272, pros::Color::black);break;
             case 1: // Blue (right)
-                draw_hollow_rect(354, 0,   480, 272, pros::Color::black);
-                break;
+                draw_hollow_rect(354,0,480,  272, pros::Color::black);break;
             case 2: // Skills (top middle)
-                draw_hollow_rect(127, 0,   353, 136, pros::Color::black);
-                break;
+                draw_hollow_rect(127,0,353,  136, pros::Color::black);break;
             case 3: // Driving skills (bottom middle)
-                draw_hollow_rect(127, 137, 353, 272, pros::Color::black);
-                break;
+                draw_hollow_rect(127,137,353,272, pros::Color::black);break;
         }
 
         pros::delay(50);

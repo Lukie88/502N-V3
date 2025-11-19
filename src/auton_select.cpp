@@ -94,7 +94,7 @@ void auton_menus() {
         if (controller.get_digital_new_press(DIGITAL_A)) {
             autoSelected = true; // this will break the while loop
         }
-
+            
         // B button: reset to default (Red) and clear screen
         if (controller.get_digital_new_press(DIGITAL_B)) {
             selected_section = 0;

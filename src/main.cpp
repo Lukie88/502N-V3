@@ -81,7 +81,11 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    chassis.turnToHeading(90, 100000);
+chassis.setPose(-48.813,13.767,0);
+setWingDescore(true);
+runIntakeStore();
+chassis.moveToPose(-48.333, 46.78, 90,1500,{.minSpeed=40});
+chassis.moveToPose(-65.159,46.139, 90,1500,{.forwards=false, .minSpeed=60});
 
     
 
@@ -148,6 +152,9 @@ if (controller.get_digital_new_press(DIGITAL_RIGHT)) {
 
  if (controller.get_digital_new_press(DIGITAL_L2)) {
  pistonWing.toggle();}
+ pros::delay(20); 
+  if (controller.get_digital_new_press(DIGITAL_A)) {
+ pistonodom.toggle();}
  pros::delay(20); 
 }
 }

@@ -33,6 +33,8 @@ inline pros::Motor intakemid(-9, pros::v5::MotorGears::blue, pros::v5::MotorUnit
 inline pros::adi::Pneumatics pistonload('A', false); // match-load / downward mechanism
 // Wing Mechanism- Button L2
 inline pros::adi::Pneumatics pistonWing('B', false); // match-load / downward mechanism
+// Piston odom
+inline pros::adi::Pneumatics pistonodom('c', false); // match-load / downward mechanism
 
 // Optical Sensors
 inline pros::Optical sorterOptical(12);

@@ -44,6 +44,7 @@ void initialize() {
   chassis.calibrate(); // calibrate sensors
   chassis.setPose(0,0,0); // set starting position (x, y, heading)
   controller.rumble(".");
+  init_sorter_sensor();
   pros::delay(20); // update every 20 ms
 }
 
@@ -85,7 +86,7 @@ void autonomous() {
 chassis.setPose(-48,15,90);
 runIntakeStore();
 chassis.moveToPose(-27, 26, 70,3000,{.maxSpeed=90});
-chassis.moveToPose(-4, 45, 45,3000,{.maxSpeed =127});
+chassis.moveToPose(-4, 45, 45,000,{.maxSpeed =127});
 pros::delay(1500);
 setMatchLoad(true);
 chassis.moveToPose(-24, 25, 45, 1500,{.maxSpeed=-127 });
@@ -120,16 +121,26 @@ int turn    = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
   left_mg.move(static_cast<int>(driveOut.left));
   right_mg.move(static_cast<int>(driveOut.right));
 
-  // Intake mappings (priority order matches the requested controller layout)
+// --- Intake Controls ---
+  if (controller.get_digital_new_press(DIGITAL_X)) {
+      cycle_sorter_alliance();
+      controller.print(0, 0, "Clr:%-4s", sorter_alliance_name(get_sorter_alliance()));
+  }
+
+  if (controller.get_digital_new_press(DIGITAL_B)) {
+      toggle_sorter_enabled();
+      controller.print(1, 0, "Sort:%s ", sorterEnabled ? "ON" : "OFF");
+  }
+
   if (controller.get_digital(DIGITAL_R1)) {
       // R1 → Intake (Just Storing)
       runIntakeStore();
     } else if (controller.get_digital(DIGITAL_R2)) {
       // R2 → Intake + High Goal Scoring
-      scoreHighGoal();
+      run_color_sorter(SorterRequest::HighGoal);
     } else if (controller.get_digital(DIGITAL_L1)) {
       // L1 → Intake + Middle Goal Scoring
-      scoreMiddleGoal();
+      run_color_sorter(SorterRequest::MiddleGoal);
     } else if (controller.get_digital(DIGITAL_Y)) {
       // Y → Outake
       runOuttake();

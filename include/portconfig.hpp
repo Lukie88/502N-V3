@@ -1,5 +1,7 @@
 #include "api.h"
 #include "lemlib/api.hpp"
+#include "pros/optical.hpp"
+
 
 
 //controllers
@@ -32,6 +34,8 @@ inline pros::adi::Pneumatics pistonload('A', false); // match-load / downward me
 // Wing Mechanism- Button L2
 inline pros::adi::Pneumatics pistonWing('B', false); // match-load / downward mechanism
 
+// Optical Sensors
+inline pros::Optical sorterOptical(12);
 
 // Inertial Sensor
 inline pros::Imu imu_sensor(15);

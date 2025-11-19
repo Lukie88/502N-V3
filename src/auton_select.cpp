@@ -6,6 +6,36 @@
 #include "pros/screen.hpp"
 #include "pros/rtos.hpp"
 
+
+
+//Quadrant 0
+#define Q0_X1 0
+#define Q0_Y1 0
+#define Q0_X2 126
+#define Q0_Y2 272
+//Quadrant 1
+#define Q1_X1 354
+#define Q1_Y1 0
+#define Q1_X2 480
+#define Q1_Y2 272
+//Quadrant 2
+#define Q2_X1 127
+#define Q2_Y1 0
+#define Q2_X2 353
+#define Q2_Y2 136
+//Quadrant 3
+#define Q3_X1 127
+#define Q3_Y1 137
+#define Q3_X2 353
+#define Q3_Y2 272
+
+
+
+
+
+
+
+
 short int selected_auto = 0;      // which specific auton inside a color menu (to be used later)
 short int selected_section = 0;   // 0 = red, 1 = blue, 2 = skills, 3 = driving skills
 
@@ -21,19 +51,19 @@ void clear_screen() {
 void main_menu_grid() {
     // Red (left column)
     pros::screen::set_pen(pros::Color::red);
-    pros::screen::fill_rect(0, 0, 126, 272);
+    pros::screen::fill_rect(Q0_X1, Q0_Y1, Q0_X2, Q0_Y2);
 
     // Blue (right column)
     pros::screen::set_pen(pros::Color::blue);
-    pros::screen::fill_rect(354, 0, 480, 272);
+    pros::screen::fill_rect(Q1_X1, Q1_Y1, Q1_X2, Q1_Y2);
 
     // Skills (top middle)
     pros::screen::set_pen(pros::Color::gray);
-    pros::screen::fill_rect(127, 0, 353, 136);
+    pros::screen::fill_rect(Q2_X1, Q2_Y1, Q2_X2, Q2_Y2);
 
     // Driving skills (bottom middle)
     pros::screen::set_pen(pros::Color::white);
-    pros::screen::fill_rect(127, 137, 353, 272);
+    pros::screen::fill_rect(Q3_X1, Q3_Y1, Q3_X2, Q3_Y2);
 }
 
 // Draw a hollow rectangle with a fixed thickness around the given box
@@ -69,32 +99,48 @@ void auton_menus() {
     // This flag tracks whether the user has locked in a choice with A
     bool autoSelected = false;
 
-    // Start from some default section (0 = red)
-    selected_section = 0;
 
-    clear_screen();
+    selected_section = 10;
 
+    //clear_screen();
+    pros::screen_touch_status_s_t touchstatus;
     // Run while robot is disabled and we haven't locked selection
-    while (pros::competition::is_disabled() && !autoSelected) {
+    while (autoSelected == false) {
         // --- INPUT HANDLING --- //
 
+        touchstatus = pros::screen::touch_status();
         // Move selection left (wrap 0 -> 3)
-        if (controller.get_digital_new_press(DIGITAL_LEFT)) {
-            selected_section--;
-            if (selected_section < 0) selected_section = 3;
-        }
+        if (touchstatus.touch_status == pros::E_TOUCH_RELEASED) {
+            
+            int x = touchstatus.x;
+            int y = touchstatus.y;
 
-        // Move selection right (wrap 3 -> 0)
-        if (controller.get_digital_new_press(DIGITAL_RIGHT)) {
-            selected_section++;
-            if (selected_section > 3) selected_section = 0;
+            // Check touch against the four quadrant areas (buttons)
+            if (is_touch_in_rect(x, y, Q0_X1, Q0_Y1, Q0_X2, Q0_Y2)) {
+                // Top Left: Red Front (Index 0)
+                selected_section = 0;
+            } else if (is_touch_in_rect(x, y, Q1_X1, Q1_Y1, Q1_X2, Q1_Y2)) {
+                // Top Right: Blue Back (Index 1)
+                selected_section = 1;
+            } else if (is_touch_in_rect(x, y, Q2_X1, Q2_Y1, Q2_X2, Q2_Y2)) {
+                // Bottom Left: Skills (Index 2)
+                selected_section = 2;
+            } else if (is_touch_in_rect(x, y, Q3_X1, Q3_Y1, Q3_X2, Q3_Y2)) {
+                // Bottom Right: L1 Spin (Index 3)
+                selected_section = 3;
+            }
+            
+            // If any quadrant was touched (re-selected or selected for the first time), lock it in
+            if (selected_section >= 0 && selected_section <= 3) {
+                 autoSelected = true;
+            }
         }
 
         // A button: confirm current section and exit this menu
         if (controller.get_digital_new_press(DIGITAL_A)) {
             autoSelected = true; // this will break the while loop
         }
-            
+        
         // B button: reset to default (Red) and clear screen
         if (controller.get_digital_new_press(DIGITAL_B)) {
             selected_section = 0;
@@ -123,4 +169,9 @@ void auton_menus() {
 
 
     //I  want you to givem e a guide on how to create autonomous fucntions. so bacilly in the auton code when run autonomous, lets make one command for when i  run the auton commnad, itr spins the motor as it would in when i press L1
+}
+
+bool is_touch_in_rect(int x, int y, int x1, int y1, int x2, int y2) {
+    // Check bounds: x must be between x1 and x2, y between y1 and y2
+    return (x >= x1 && x <= x2 && y >= y1 && y <= y2);
 }

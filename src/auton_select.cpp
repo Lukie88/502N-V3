@@ -120,8 +120,6 @@ void auton_menus() {
     }
     
 
-    
-    //I  want you to givem e a guide on how to create autonomous fucntions. so bacilly in the auton code when run autonomous, lets make one command for when i  run the auton commnad, itr spins the motor as it would in when i press L1
 }
 
 bool is_touch_in_rect(int x, int y, int x1, int y1, int x2, int y2) {

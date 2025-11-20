@@ -9,25 +9,25 @@
 
 
 //Quadrant 0
-#define Q0_X1 0
-#define Q0_Y1 0
-#define Q0_X2 126
-#define Q0_Y2 272
+constexpr short int Q0_X1 = 0;
+constexpr short int Q0_Y1 = 0;
+constexpr short int Q0_X2 = 126;
+constexpr short int Q0_Y2 = 272;
 //Quadrant 1
-#define Q1_X1 354
-#define Q1_Y1 0
-#define Q1_X2 480
-#define Q1_Y2 272
+constexpr short int Q1_X1 = 354;
+constexpr short int Q1_Y1 = 0;
+constexpr short int Q1_X2 = 480;
+constexpr short int Q1_Y2 = 272;
 //Quadrant 2
-#define Q2_X1 127
-#define Q2_Y1 0
-#define Q2_X2 353
-#define Q2_Y2 136
+constexpr short int Q2_X1 = 127;
+constexpr short int Q2_Y1 = 0;
+constexpr short int Q2_X2 = 353;
+constexpr short int Q2_Y2 = 136;
 //Quadrant 3
-#define Q3_X1 127
-#define Q3_Y1 137
-#define Q3_X2 353
-#define Q3_Y2 272
+constexpr short int Q3_X1 = 127;
+constexpr short int Q3_Y1 = 137;
+constexpr short int Q3_X2 = 353;
+constexpr short int Q3_Y2 = 272;
 
 
 
@@ -98,13 +98,11 @@ Top-level auton selection UI.
 void auton_menus() {
     // This flag tracks whether the user has locked in a choice with A
     bool autoSelected = false;
-
-
     selected_section = 10;
 
-    //clear_screen();
+    clear_screen();
     pros::screen_touch_status_s_t touchstatus;
-    // Run while robot is disabled and we haven't locked selection
+    // Run while we haven't locked selection
     while (autoSelected == false) {
         // --- INPUT HANDLING --- //
 
@@ -135,21 +133,6 @@ void auton_menus() {
                  autoSelected = true;
             }
         }
-
-        // A button: confirm current section and exit this menu
-        if (controller.get_digital_new_press(DIGITAL_A)) {
-            autoSelected = true; // this will break the while loop
-        }
-        
-        // B button: reset to default (Red) and clear screen
-        if (controller.get_digital_new_press(DIGITAL_B)) {
-            selected_section = 0;
-            clear_screen();
-        }
-
-        // UI
-
-        // Draw all 4 quadrants
         main_menu_grid();
 
         // Draw a highlight box around the currently selected section

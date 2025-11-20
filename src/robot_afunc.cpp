@@ -125,8 +125,7 @@ RingColor detect_ring_color() {
     pros::c::optical_rgb_s_t rgb = sorterOptical.get_rgb();
     int total = rgb.red + rgb.green + rgb.blue;
 
-    // The hue-based logic was classifying dim blue rings as "no reading," so
-    // fall back to comparing the dominant RGB channel with a light threshold.
+    
     if (total < 90) {
         return RingColor::None;
     }

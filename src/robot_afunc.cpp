@@ -68,6 +68,7 @@ void runOuttake(int duration_ms) {
 }
 
 void scoreMiddleGoal(int duration_ms) {
+    runPreset(600,600,600,400);
     runPreset(-600, 600, -600, duration_ms);
 }
 

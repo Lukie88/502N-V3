@@ -84,11 +84,18 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-chassis.setPose(-48.813,13.767,0);
+chassis.setPose(-56,-15,180);
 setWingDescore(true);
 runIntakeStore();
-chassis.moveToPose(-48.333, 46.78, 90,1500,{.minSpeed=40});
-chassis.moveToPose(-65.159,46.139, 90,1500,{.forwards=false, .minSpeed=60});
+chassis.moveToPose(-48, -46, 180,1500,{.maxSpeed=127});
+chassis.moveToPose(-65.159,-46.139, -90,1500,{.forwards=false,.maxSpeed=127});
+chassis.moveToPose(-63, -47, -90,1200,{.maxSpeed=127});
+pros::Task::delay(200);
+setMatchLoad(true);
+runIntakeStore();
+pros::Task::delay(2000);
+
+
 
     
 

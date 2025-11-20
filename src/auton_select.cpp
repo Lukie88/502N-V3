@@ -7,7 +7,7 @@
 #include "pros/rtos.hpp"
 
 
-
+//Quadrant coordinate definitions
 //Quadrant 0
 constexpr short int Q0_X1 = 0;
 constexpr short int Q0_Y1 = 0;
@@ -29,15 +29,10 @@ constexpr short int Q3_Y1 = 137;
 constexpr short int Q3_X2 = 353;
 constexpr short int Q3_Y2 = 272;
 
-
-
-
-
-
-
-
 short int selected_auto = 0;      // which specific auton inside a color menu (to be used later)
 short int selected_section = 0;   // 0 = red, 1 = blue, 2 = skills, 3 = driving skills
+
+
 
 int get_selected_auto() { return selected_auto; }
 
@@ -85,7 +80,7 @@ void draw_hollow_rect(int x0, int y0, int x1, int y1, pros::Color color) {
 void red_menu() {}
 void blue_menu() {}
 void skills_menu() {}
-void driving_skills_menu() {}
+void driving_skills_menu() {}  
 
 /**
 Top-level auton selection UI.
@@ -97,64 +92,68 @@ Top-level auton selection UI.
  */
 void auton_menus() {
     // This flag tracks whether the user has locked in a choice with A
-    bool autoSelected = false;
+    bool auto_selected = false;
     selected_section = 10;
-
+    short int double_tap_confirmation = 10;
     clear_screen();
-    pros::screen_touch_status_s_t touchstatus;
+    pros::screen_touch_status_s_t touch_status;
     // Run while we haven't locked selection
-    while (autoSelected == false) {
+    while (auto_selected == false) {
         // --- INPUT HANDLING --- //
 
-        touchstatus = pros::screen::touch_status();
+        touch_status = pros::screen::touch_status();
         // Move selection left (wrap 0 -> 3)
-        if (touchstatus.touch_status == pros::E_TOUCH_RELEASED) {
+        if (touch_status.touch_status == pros::E_TOUCH_RELEASED) {
+            double_tap_confirmation = touch_registration(touch_status.x, touch_status.y);
             
-            int x = touchstatus.x;
-            int y = touchstatus.y;
-
-            // Check touch against the four quadrant areas (buttons)
-            if (is_touch_in_rect(x, y, Q0_X1, Q0_Y1, Q0_X2, Q0_Y2)) {
-                // Top Left: Red Front (Index 0)
-                selected_section = 0;
-            } else if (is_touch_in_rect(x, y, Q1_X1, Q1_Y1, Q1_X2, Q1_Y2)) {
-                // Top Right: Blue Back (Index 1)
-                selected_section = 1;
-            } else if (is_touch_in_rect(x, y, Q2_X1, Q2_Y1, Q2_X2, Q2_Y2)) {
-                // Bottom Left: Skills (Index 2)
-                selected_section = 2;
-            } else if (is_touch_in_rect(x, y, Q3_X1, Q3_Y1, Q3_X2, Q3_Y2)) {
-                // Bottom Right: L1 Spin (Index 3)
-                selected_section = 3;
+            if (double_tap_confirmation >= 0 && double_tap_confirmation <= 3) {
+                // If the user tapped the SAME quadrant twice Lock it in
+                if (double_tap_confirmation == selected_section) {
+                    outline_section(selected_section, pros::Color::black);
+                    auto_selected = true;}
+                else{selected_section = double_tap_confirmation;
+                outline_section(selected_section, pros::Color::light_cyan);}
             }
-            
-            
         }
         main_menu_grid();
-
-        // Draw a highlight box around the currently selected section
-        switch (selected_section) {
-            case 0: // Red (left)
-                draw_hollow_rect(0,0,126,    272, pros::Color::black);break;
-            case 1: // Blue (right)
-                draw_hollow_rect(354,0,480,  272, pros::Color::black);break;
-            case 2: // Skills (top middle)
-                draw_hollow_rect(127,0,353,  136, pros::Color::black);break;
-            case 3: // Driving skills (bottom middle)
-                draw_hollow_rect(127,137,353,272, pros::Color::black);break;
-        }
-        // If any quadrant was touched (re-selected or selected for the first time), lock it in
-            if (selected_section >= 0 && selected_section <= 3) {
-                 autoSelected = true;
-            }
         pros::delay(50);
     }
+    
 
-
+    
     //I  want you to givem e a guide on how to create autonomous fucntions. so bacilly in the auton code when run autonomous, lets make one command for when i  run the auton commnad, itr spins the motor as it would in when i press L1
 }
 
 bool is_touch_in_rect(int x, int y, int x1, int y1, int x2, int y2) {
     // Check bounds: x must be between x1 and x2, y between y1 and y2
     return (x >= x1 && x <= x2 && y >= y1 && y <= y2);
+}
+
+void outline_section(short int section, pros::Color color) {
+    switch (section) {
+        case 0: // Red (left)
+            draw_hollow_rect(0,0,126,    272, color);break;
+        case 1: // Blue (right)
+            draw_hollow_rect(354,0,480,  272, color);break;
+        case 2: // Skills (top middle)
+            draw_hollow_rect(127,0,353,  136, color);break;
+        case 3: // Driving skills (bottom middle)
+            draw_hollow_rect(127,137,353,272, color);break;
+    }
+}
+
+short int touch_registration(short int x, short int y) {
+    if (is_touch_in_rect(x, y, Q0_X1, Q0_Y1, Q0_X2, Q0_Y2)) {
+                // Top Left: Red Front (Index 0)
+                return 0;
+            } else if (is_touch_in_rect(x, y, Q1_X1, Q1_Y1, Q1_X2, Q1_Y2)) {
+                // Top Right: Blue Back (Index 1)
+                return 1;
+            } else if (is_touch_in_rect(x, y, Q2_X1, Q2_Y1, Q2_X2, Q2_Y2)) {
+                // Bottom Left: Skills (Index 2)
+                return 2;
+            } else if (is_touch_in_rect(x, y, Q3_X1, Q3_Y1, Q3_X2, Q3_Y2)) {
+                // Bottom Right: L1 Spin (Index 3)
+                return 3;
+            }
 }

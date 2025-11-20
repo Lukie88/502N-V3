@@ -15,35 +15,37 @@ void red_1() {
 chassis.setPose(-48,15,90);
 setWingDescore(true);
 runIntakeStore();
-chassis.moveToPose(-18, 26, 70,1500,{.minSpeed=30});
-
-chassis.moveToPose(-5,48, 30,1500,{.maxSpeed =127});
+chassis.moveToPose(-22, 22, 70,1500,{.maxSpeed=90,.minSpeed=60});
+pros::Task::delay(1000);
 setMatchLoad(true);
+chassis.moveToPose(-6,44, 30,2000,{.maxSpeed =127});
 pros::delay(500);
 setMatchLoad(false);
-pros::delay(1000);
 
-chassis.moveToPose(-24, 23, 45, 1500, {.forwards=false, .minSpeed=60});
+chassis.moveToPose(-24, 23, 45, 1500, {.forwards=false, .maxSpeed=127});
 pros::delay(500);
 
-chassis.moveToPose(-6, 9, -45, 2000,{.forwards=false});
+chassis.moveToPose(-2, 8, -45, 2000,{.forwards=false, .maxSpeed=127});
 pros::delay(1000);
 stopIntakes();
 pros::delay(500);
-scoreMiddleGoal();
-pros::delay(2000);
+pros::Task::delay(100);
+scoreMiddleGoal(1500);
+pros::delay(1000);
 stopIntakes();
-chassis.moveToPose(-42, 47, -45, 1500,{.minSpeed=60});
-chassis.moveToPose(-70, 47, -90, 1000,{.minSpeed=50});
+pros::Task::delay(200);
+chassis.moveToPose(-38, 46, -45, 2000,{.maxSpeed=127});
+chassis.moveToPose(-80, 48, -90, 2000,{.maxSpeed=127, .minSpeed=80});
 setMatchLoad(true);
 runIntakeStore();
-pros::delay(2000);
-chassis.moveToPose(-10, 43, -90, 2000,{.forwards=false});
+pros::delay(1500);
+chassis.moveToPose(-10, 48, -90, 3000,{.forwards=false, .maxSpeed=127, .minSpeed=50});
 pros::delay(500);
 setMatchLoad(false);
 pros::delay(1500);
 scoreHighGoal();
-}
+pros::Task::delay(1500);
+stopIntakes();}
 
 void red_2() {
     chassis.setPose(0, 0, 0);

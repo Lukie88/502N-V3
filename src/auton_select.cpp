@@ -128,10 +128,7 @@ void auton_menus() {
                 selected_section = 3;
             }
             
-            // If any quadrant was touched (re-selected or selected for the first time), lock it in
-            if (selected_section >= 0 && selected_section <= 3) {
-                 autoSelected = true;
-            }
+            
         }
         main_menu_grid();
 
@@ -146,7 +143,10 @@ void auton_menus() {
             case 3: // Driving skills (bottom middle)
                 draw_hollow_rect(127,137,353,272, pros::Color::black);break;
         }
-
+        // If any quadrant was touched (re-selected or selected for the first time), lock it in
+            if (selected_section >= 0 && selected_section <= 3) {
+                 autoSelected = true;
+            }
         pros::delay(50);
     }
 

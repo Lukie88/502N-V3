@@ -40,7 +40,6 @@ void poseDebugTask(void*) {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize(); // initialize brain screen
   chassis.calibrate(); // calibrate sensors
   chassis.setPose(0,0,0); // set starting position (x, y, heading)
   controller.rumble(".");

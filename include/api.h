@@ -79,6 +79,8 @@
 #include "pros/rtos.hpp"
 #include "pros/screen.hpp"
 #include "pros/vision.hpp"
+
+#include "liblvgl/lvgl.h"
 #endif
 
 #endif  // _PROS_API_H_

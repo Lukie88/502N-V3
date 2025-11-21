@@ -1,6 +1,6 @@
 #include "auton_routines.hpp"
-#include "Main_Drive.hpp"
-#include "Portconfig.hpp"
+#include "main_drive.hpp"
+#include "portconfig.hpp"
 #include "lemlib/api.hpp"
 #include "robot_afunc.hpp"
 

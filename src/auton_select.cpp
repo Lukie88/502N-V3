@@ -2,7 +2,7 @@
 #include "auton_select.hpp"
 #include "lemlib/api.hpp"
 #include "auton_routines.hpp"
-#include "Portconfig.hpp"
+#include "portconfig.hpp"
 #include "pros/screen.hpp"
 #include "pros/rtos.hpp"
 

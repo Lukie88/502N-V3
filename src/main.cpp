@@ -55,7 +55,9 @@ void initialize() {
  */
 void disabled() {
   // a`(controller.get_digital_new_press(DIGITAL_B)){auton_menus();}
-  auton_menus();
+  //auton_menus();
+
+
 }
 
 /**
@@ -120,7 +122,7 @@ pros::Task::delay(2000);*/
 
 void opcontrol() {
 
-  clear_screen();
+  //clear_screen();
 	while (true) {
     
   int forward = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);

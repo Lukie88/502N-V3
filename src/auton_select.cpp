@@ -32,7 +32,22 @@ constexpr short int Q3_Y2 = 272;
 short int selected_auto = 0;      // which specific auton inside a color menu (to be used later)
 short int selected_section = 0;   // 0 = red, 1 = blue, 2 = skills, 3 = driving skills
 
+struct auton_data{
+    short int catagory;
+    short int auton_val;
+    std::string func_name;
+};
 
+auton_data autolist[8] = {
+    {0, 1,"red_1"},
+    {0, 2,"red_2"},
+    {0, 3,"red_3"},
+    {1, 4,"blue_1"},
+    {1, 5,"blue_2"},
+    {1, 6,"blue_3"},
+    {2, 7,"skills_auton_routine"},
+    {3, 8,"skills_driving_routine"}
+};
 
 int get_selected_auto() { return selected_auto; }
 
@@ -159,8 +174,8 @@ void display_autos(short int section){
 
     std::string auton_names;
     for (int i = 0; i < 8; i++){
-        if (autolist[i][0].catagory == section){
-            auton_names.append(autolist[i][2].func_name + "\n");
+        if (autolist[i].catagory == section){
+            auton_names.append(autolist[i].func_name + "\n");
         }
     }
 

@@ -28,7 +28,9 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
+#include <any>
 #include <iostream>
+#include <string>
 #else /* (not) __cplusplus */
 #include <errno.h>
 #include <math.h>

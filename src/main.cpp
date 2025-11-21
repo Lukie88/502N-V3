@@ -24,7 +24,7 @@ void on_center_button() {
 void poseDebugTask(void*) {
     while (true) {
         lemlib::Pose pose = chassis.getPose(); // (x, y, heading)
-
+        
         pros::lcd::print(0, "X: %.2f in", pose.x);
         pros::lcd::print(1, "Y: %.2f in", pose.y);
         pros::lcd::print(2, "H: %.2f deg", pose.theta);

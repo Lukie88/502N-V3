@@ -118,8 +118,7 @@ void auton_menus() {
         main_menu_grid();
         pros::delay(50);
     }
-    
-
+    display_autos(selected_section);
 }
 
 bool is_touch_in_rect(int x, int y, int x1, int y1, int x2, int y2) {
@@ -130,13 +129,13 @@ bool is_touch_in_rect(int x, int y, int x1, int y1, int x2, int y2) {
 void outline_section(short int section, pros::Color color) {
     switch (section) {
         case 0: // Red (left)
-            draw_hollow_rect(0,0,126,    272, color);break;
+            draw_hollow_rect(Q0_X1,Q0_Y1,Q0_X2,Q0_Y2, color);break;
         case 1: // Blue (right)
-            draw_hollow_rect(354,0,480,  272, color);break;
+            draw_hollow_rect(Q1_X1,Q1_Y1,Q1_X2,Q1_Y2, color);break;
         case 2: // Skills (top middle)
-            draw_hollow_rect(127,0,353,  136, color);break;
+            draw_hollow_rect(Q2_X1,Q2_Y1,Q2_X2,Q2_Y2, color);break;
         case 3: // Driving skills (bottom middle)
-            draw_hollow_rect(127,137,353,272, color);break;
+            draw_hollow_rect(Q3_X1,Q3_Y1,Q3_X2,Q3_Y2, color);break;
     }
 }
 
@@ -154,4 +153,38 @@ short int touch_registration(short int x, short int y) {
                 // Bottom Right: L1 Spin (Index 3)
                 return 3;
             }
+}
+
+void display_autos(short int section){
+
+    std::string auton_names;
+    for (int i = 0; i < 8; i++){
+        if (autolist[i][0].catagory == section){
+            auton_names.append(autolist[i][2].func_name + "\n");
+        }
+    }
+
+
+    draw_4_quadrants(section);
+    
+    //get all the rows in the 2d array
+    //get all the string values in the rows that match the section
+    //add all the string values to another array
+    
+}
+
+void draw_4_quadrants(short int section){
+    switch (section){
+        case 0:pros::screen::set_pen(pros::Color::red); break;
+        case 1:pros::screen::set_pen(pros::Color::blue); break;
+        case 2:pros::screen::set_pen(pros::Color::gray); break;
+        case 3:pros::screen::set_pen(pros::Color::white); break;}
+    pros::screen::fill_rect(0, 0, 240, 136);
+    pros::screen::fill_rect(240, 0, 480, 136);
+    pros::screen::fill_rect(0, 136, 240, 272);
+    pros::screen::fill_rect(240, 136, 480, 272);
+    draw_hollow_rect(0, 0, 240, 136, pros::Color::black);
+    draw_hollow_rect(240, 0, 480, 136, pros::Color::black);
+    draw_hollow_rect(0, 136, 240, 272, pros::Color::black);
+    draw_hollow_rect(240, 136, 480, 272, pros::Color::black);
 }

@@ -17,3 +17,5 @@ bool is_touch_in_rect(int x, int y, int x1, int y1, int x2, int y2);
 void outline_section(short int section, pros::Color color);
 short int touch_registration(short int x, short int y);
 void display_autos(short int section);*/
+
+void lv_example_menu_5(void);

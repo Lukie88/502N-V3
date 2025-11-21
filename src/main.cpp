@@ -56,7 +56,7 @@ void initialize() {
 void disabled() {
   // a`(controller.get_digital_new_press(DIGITAL_B)){auton_menus();}
   //auton_menus();
-
+  lv_example_menu_5();
 
 }
 

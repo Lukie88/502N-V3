@@ -8,7 +8,7 @@
 inline pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 //motors
-inline pros::MotorGroup left_mg({1, -5, -3}, pros::MotorGearset::blue);
+inline pros::MotorGroup left_mg({6, -5, -10}, pros::MotorGearset::blue);
 inline pros::MotorGroup right_mg({-19, 18, 17}, pros::MotorGearset::blue);
 
 inline lemlib::Drivetrain drivetrain(&left_mg, // left motor group
@@ -42,7 +42,7 @@ inline pros::Optical sorterOptical(12);
 // Inertial Sensor
 inline pros::Imu imu_sensor(15);
 // horizontal tracking wheel rotational sensor
-inline pros::Rotation horizontal_sensor(-13);
+inline pros::Rotation horizontal_sensor(-14);
 // vertical tracking wheel rotational sensor
 inline pros::Rotation vertical_sensor(-16);
 
@@ -66,9 +66,9 @@ inline lemlib::ControllerSettings lateral_controller(5, // proportional gain (kP
                                               2.5, // anti windup
                                               0.25, // small error range, in inches
                                               250, // small error range timeout, in milliseconds
-                                              0.75, // large error range, in inches
-                                              1000, // large error range timeout, in milliseconds
-                                              8 // maximum acceleration (slew)
+                                              0.5, // large error range, in inches
+                                              500, // large error range timeout, in milliseconds
+                                              10 // maximum acceleration (slew)
 );
 
 // angular PID controller

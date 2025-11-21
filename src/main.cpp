@@ -21,6 +21,7 @@ void on_center_button() {
 		pros::lcd::clear_line(2);
 	}
 }
+
 void poseDebugTask(void*) {
     while (true) {
         lemlib::Pose pose = chassis.getPose(); // (x, y, heading)
@@ -42,9 +43,10 @@ void poseDebugTask(void*) {
 void initialize() {
 	pros::lcd::initialize(); // initialize brain screen
   chassis.calibrate(); // calibrate sensors
-  chassis.setPose(0,0,0); // set starting position (x, y, heading)
+  // chassis.setPose(0,0,0); // set starting position (x, y, heading)
   controller.rumble(".");
   init_sorter_sensor();
+  static pros::Task poseTask(poseDebugTask,nullptr);
   pros::delay(20); // update every 20 ms
   
 }
@@ -55,7 +57,6 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-  // a`(controller.get_digital_new_press(DIGITAL_B)){auton_menus();}
   auton_menus();
 }
 
@@ -69,7 +70,6 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
-  
 }
 
 /**
@@ -84,24 +84,8 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-auton_routes::red_1();
 
-
-
-/*chassis.setPose(-56,-15,180);8
-setWingDescore(true);
-runIntakeStore();
-chassis.moveToPose(-48, -46, 180,1500,{.maxSpeed=127});
-chassis.moveToPose(-65.159,-46.139, -90,1500,{.forwards=false,.maxSpeed=127});
-chassis.moveToPose(-63, -47, -90,1200,{.maxSpeed=127});
-pros::Task::delay(200);
-setMatchLoad(true);
-runIntakeStore();
-pros::Task::delay(2000);*/
-
-
-
-    
+auton_routes::red_1();   
 
 }
 /**
@@ -121,9 +105,13 @@ pros::Task::delay(2000);*/
 
 void opcontrol() {
 
-  clear_screen();
-	while (true) {
-    
+pistonodom.set_value(true); 
+pistonWing.set_value(true);
+chassis.setPose(-48,15,90);
+
+
+  while (true) {
+  
   int forward = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
   int turn    = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 

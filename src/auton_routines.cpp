@@ -95,6 +95,7 @@ stopIntakes();
 
 void red_3() {
 //RED AWP AUTON
+drive_distance_inches(10);
 }
 
 

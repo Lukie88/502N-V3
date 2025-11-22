@@ -1,4 +1,6 @@
 #include "Main_Drive.hpp"
+#include "portconfig.hpp"
+#include <cmath>
 
 // ----- CONSTANTS (same as your RobotDrive) ----- //
 static const float CONTROLLER_THROTTLE_CURVE = 1.2f;
@@ -95,4 +97,34 @@ DriveOutput calc_curvatherp(int throttle, int turn) {
 
     return { static_cast<float>(leftPower  * 127.0),
              static_cast<float>(rightPower * 127.0) };
+}
+
+void drive_distance_inches(double inches, int speed) {
+    constexpr double wheel_diam_inches = 3.25;
+    constexpr double tolerance_deg = 5.0; // degrees of error allowed
+    constexpr double degrees_per_rev = 360.0;
+    constexpr double pi = 3.14159265358979323846;
+    const double wheel_circumference = wheel_diam_inches * pi;
+
+    const double target_deg = inches / wheel_circumference * degrees_per_rev;
+
+    left_mg.tare_position();
+    right_mg.tare_position();
+
+    left_mg.move_relative(target_deg, speed);
+    right_mg.move_relative(target_deg, speed);
+
+    pros::delay(20); // Give the motors a moment to start moving
+
+    while (true) {
+        double left_pos  = left_mg.get_position();
+        double right_pos = right_mg.get_position();
+
+        bool left_done  = std::fabs(left_pos  - target_deg) < tolerance_deg;
+        bool right_done = std::fabs(right_pos - target_deg) < tolerance_deg;
+
+        if (left_done && right_done) break;
+
+        pros::delay(10);
+    }
 }

@@ -1,6 +1,6 @@
 #include "robot_afunc.hpp"
 #include "portconfig.hpp"
-
+#include <cstdint>
 
 
 namespace {
@@ -109,6 +109,8 @@ SorterAlliance currentAlliance = SorterAlliance::None;
 bool sorterSensorReady = false;
 
 enum class RingColor { None, Red, Blue };
+
+static uint32_t highDumpUntilMs = 0;
 
 RingColor alliance_to_ring(SorterAlliance alliance) {
     switch (alliance) {

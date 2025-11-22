@@ -15,3 +15,6 @@ DriveOutput calc_curvatherp(int throttle, int turn);
 
 //arcade pure
 DriveOutput calc_ez_arcade(int throttle, int turn);
+
+// Drive a straight-line distance (in inches) using only the drivetrain motor encoders.
+void drive_distance_inches(double inches, int speed = 100);

@@ -403,7 +403,37 @@ void lv_example_menu_5(void)
                       NULL);
 }
 
-
+void run_selected_auton() {
+    switch(selected_auto) {
+        case 1:
+            auton_routes::red_1();
+            break;
+        case 2:
+            auton_routes::red_2();
+            break;
+        case 3:
+            auton_routes::red_3();
+            break;
+        case 4:
+            auton_routes::blue_1();
+            break;
+        case 5:
+            auton_routes::blue_2();
+            break;
+        case 6:
+            auton_routes::blue_3();
+            break;
+        case 7:
+            auton_routes::skills_auton_routine();
+            break;
+        case 8:
+            auton_routes::skills_driving_routine();
+            break;
+        default:
+            // No valid auton selected; do nothing
+            break;
+    }
+}
 
 
 

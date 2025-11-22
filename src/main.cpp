@@ -85,23 +85,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-auton_routes::red_1();
-
-
-
-/*chassis.setPose(-56,-15,180);8
-setWingDescore(true);
-runIntakeStore();
-chassis.moveToPose(-48, -46, 180,1500,{.maxSpeed=127});
-chassis.moveToPose(-65.159,-46.139, -90,1500,{.forwards=false,.maxSpeed=127});
-chassis.moveToPose(-63, -47, -90,1200,{.maxSpeed=127});
-pros::Task::delay(200);
-setMatchLoad(true);
-runIntakeStore();
-pros::Task::delay(2000);*/
-
-
-
+run_selected_auton();
     
 
 }

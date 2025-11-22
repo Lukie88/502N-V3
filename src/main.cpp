@@ -46,7 +46,6 @@ void initialize() {
   controller.rumble(".");
   init_sorter_sensor();
   pros::delay(20); // update every 20 ms
-  
 }
 
 /**
@@ -57,7 +56,7 @@ void initialize() {
 void disabled() {
   // a`(controller.get_digital_new_press(DIGITAL_B)){auton_menus();}
   //auton_menus();
-  lv_example_menu_5();
+  brain_menu();
 }
 
 /**

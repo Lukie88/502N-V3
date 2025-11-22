@@ -28,6 +28,6 @@ static lv_obj_t * create_switch(lv_obj_t * parent,
                                 const char * icon,
                                 const char * txt,
                                 bool * external_state_ptr);
-                                
+
 void lvgl_task(void* param);
-void lv_example_menu_5(void);
+void brain_menu(void);

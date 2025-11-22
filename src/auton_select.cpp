@@ -221,7 +221,7 @@ static lv_obj_t * create_switch(lv_obj_t * parent, const char * icon, const char
 
 
 
-void lv_example_menu_5(void)
+void brain_menu(void)
 {   
     
     lv_obj_t * menu = lv_menu_create(lv_screen_active());
@@ -249,7 +249,6 @@ void lv_example_menu_5(void)
 
     lv_obj_t * sub_skills_page = lv_menu_page_create(menu, NULL);
     create_sub_section(sub_skills_page,2,menu,section);
-
 
     lv_obj_t * sub_selections_page = lv_menu_page_create(menu, NULL);
     lv_obj_set_style_pad_hor(sub_selections_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(menu), 0), 0);

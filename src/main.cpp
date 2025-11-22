@@ -40,11 +40,13 @@ void poseDebugTask(void*) {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-  pros::Task lvgl_handler(lvgl_task, NULL, "LVGL Handler");
   chassis.calibrate(); // calibrate sensors
   chassis.setPose(0,0,0); // set starting position (x, y, heading)
   controller.rumble(".");
   init_sorter_sensor();
+  pros::delay(500);
+  pros::Task lvgl_handler(lvgl_task, NULL, "LVGL Handler");
+  controller.rumble(".-.");
   pros::delay(20); // update every 20 ms
 }
 

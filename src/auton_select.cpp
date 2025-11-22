@@ -7,36 +7,12 @@
 #include "pros/rtos.hpp"
 #include "api.h"
 
-//Quadrant coordinate definitions
-//Quadrant 0
-constexpr short int Q0_X1 = 0;
-constexpr short int Q0_Y1 = 0;
-constexpr short int Q0_X2 = 126;
-constexpr short int Q0_Y2 = 272;
-//Quadrant 1
-constexpr short int Q1_X1 = 354;
-constexpr short int Q1_Y1 = 0;
-constexpr short int Q1_X2 = 480;
-constexpr short int Q1_Y2 = 272;
-//Quadrant 2
-constexpr short int Q2_X1 = 127;
-constexpr short int Q2_Y1 = 0;
-constexpr short int Q2_X2 = 353;
-constexpr short int Q2_Y2 = 136;
-//Quadrant 3
-constexpr short int Q3_X1 = 127;
-constexpr short int Q3_Y1 = 137;
-constexpr short int Q3_X2 = 353;
-constexpr short int Q3_Y2 = 272;
 
-uint32_t selected_auto = 0;      // which specific auton inside a color menu (to be used later)
+short int selected_auto = 0;      // which specific auton inside a color menu (to be used later)
 short int selected_section = 0;   // 0 = red, 1 = blue, 2 = skills, 3 = driving skills
 std::string auton_names = "";
-short int iterations = 0;
 bool show_selected_auto = false;
 
-#define CUSTOM_MENU_VARIANT_DEFAULT 0
-#define CUSTOM_MENU_VARIANT_2       1 // The replacement for LV_MENU_ITEM_BUILDER_VARIANT_2
 
 
 struct auton_data{
@@ -57,6 +33,9 @@ auton_data autolist[8] = {
 };
 const int AUTOLIST_SIZE = sizeof(autolist) / sizeof(auton_data);
 
+
+
+
 std::vector<int> get_auto_ids(short int section){
     std::vector<int> list_of_ids;
     for (int i = 0; i < 8; i++){
@@ -64,64 +43,44 @@ std::vector<int> get_auto_ids(short int section){
             list_of_ids.push_back(autolist[i].auton_val);
         }
     }
-
     return list_of_ids;
 }
 
 const char *get_auton_name(int group_param, int routine_param) {
     // Iterate through every element in the autolist array
     for (int i = 0; i < AUTOLIST_SIZE; i++) {
-
-        // Check if both the first and second values match
         if (autolist[i].catagory == group_param && autolist[i].auton_val == routine_param) {
-            
-            // Match found! Return the associated string name.
             return autolist[i].func_name.c_str();
         }
     }
-
-    // If the loop completes without finding a match, return an error string.
+    
     return "UNKNOWN_AUTON_ROUTINE";
 }
 
-
-
-
-
-
 void lvgl_task(void* param) {
-    // This loop runs continuously while the program is on.
     while (true) {
-        // 1. Give LVGL a 'tick' (time elapsed)
         lv_tick_inc(10); 
-
-        // 2. Process all pending LVGL tasks (drawing, layout, input handling)
+        // Process all pending LVGL tasks (drawing, layout, input handling)
         lv_timer_handler();
-
-        // Delay for 10ms to yield the CPU and match the tick interval
-        pros::delay(10); 
+        pros::delay(10);
     }
 }
 
+void create_sub_section(lv_obj_t * sub_page, short int section_param,lv_obj_t * menu,lv_obj_t * &section) {
+    lv_obj_set_style_pad_hor(sub_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(menu), 0), 0);
+    lv_menu_separator_create(sub_page);
+    section = lv_menu_section_create(sub_page);
+    std::vector<int> receivedVector = get_auto_ids(section_param);
+    short int iterations = 0;
+    for (int val : receivedVector) {
+        create_button(section, LV_SYMBOL_PLAY, get_auton_name(0,val), button_event_handler, val);
+        iterations++;
+    }
 
-
-
-
+}
 #if LV_USE_MENU && LV_USE_MSGBOX && LV_BUILD_EXAMPLES
-typedef enum {
-    LV_MENU_ITEM_BUILDER_VARIANT_1,
-    LV_MENU_ITEM_BUILDER_VARIANT_2
-} lv_menu_builder_variant_t;
-
-static void switch_event_handler(lv_event_t * e);
-static void button_event_handler(lv_event_t * e);
 lv_obj_t * root_page;
-static lv_obj_t * create_text(lv_obj_t * parent, const char * icon, const char * txt,
-                                lv_menu_builder_variant_t builder_variant);
-static lv_obj_t * create_slider(lv_obj_t * parent,
-                                const char * icon, const char * txt, int32_t min, int32_t max, int32_t val);
-static lv_obj_t * create_switch(lv_obj_t * parent,
-                                const char * icon, const char * txt, bool * external_state_ptr);
+
 static lv_obj_t * create_text(lv_obj_t * parent, const char * icon, const char * txt,
                               lv_menu_builder_variant_t builder_variant){
     lv_obj_t * obj = lv_menu_cont_create(parent);
@@ -147,9 +106,13 @@ static lv_obj_t * create_text(lv_obj_t * parent, const char * icon, const char *
     return obj;
 }
 
-static lv_obj_t * create_slider(lv_obj_t * parent, const char * icon, const char * txt, int32_t min, int32_t max,
-                                int32_t val)
-{
+static lv_obj_t * create_slider(lv_obj_t * parent,
+                                const char * icon,
+                                const char * txt,
+                                int32_t min,
+                                int32_t max,
+                                int32_t val){
+        
     lv_obj_t * obj = create_text(parent, icon, txt, LV_MENU_ITEM_BUILDER_VARIANT_1);
 
     lv_obj_t * slider = lv_slider_create(obj);
@@ -168,81 +131,53 @@ static void button_event_handler(lv_event_t * e) {
     lv_event_code_t code = lv_event_get_code(e);
     if (code == LV_EVENT_CLICKED) {
         lv_obj_t * btn = (lv_obj_t *)lv_event_get_target(e);
-        // Get the Section object (parent of the menu item container)
-        // Parent of btn is the menu item container. Parent of that is the section.
         lv_obj_t * section = lv_obj_get_parent(lv_obj_get_parent(btn)); 
 
-        // --- STEP 1: Deselect All Siblings (Radio Group Logic) ---
-        
-        // Get the total number of menu items in the section
         uint32_t child_count = lv_obj_get_child_count(section);
         
-        // Iterate through all children of the section using their index
         for (uint32_t i = 0; i < child_count; i++) {
-            // Get the child container (the result of lv_menu_cont_create)
             lv_obj_t * child_cont = lv_obj_get_child(section, i); 
             
             // Safety check: ensure the container is valid
             if (child_cont != NULL) {
-                // The actual button is expected to be the 3rd child (index 2) 
-                // within the container (Children: Icon @0, Label @1, Button @2)
                 lv_obj_t * sibling_btn = lv_obj_get_child(child_cont, 2); 
                 
                 if (sibling_btn != NULL) {
-                    // Remove the 'checked' state from the sibling button
-                    // (Using the corrected function from the previous step)
                     lv_obj_remove_state(sibling_btn, LV_STATE_CHECKED); 
                 }
             }
         }
-        
-        // --- STEP 2: Select the Clicked Button ---
-        // Add the 'checked' state to the button that was just clicked
         lv_obj_add_state(btn, LV_STATE_CHECKED);
-
-
-        
         void * user_data_ptr = lv_obj_get_user_data(btn);
         uint32_t retrieved_id = (uint32_t)(intptr_t)user_data_ptr;
         selected_auto = retrieved_id;
-        // Example: Change the button text temporarily
-        lv_obj_t * label = lv_obj_get_child(btn, 0); // Get the button's label
+        lv_obj_t * label = lv_obj_get_child(btn, 0);
         lv_label_set_text(label, "Selected");
 
-        // In a real application, you would start a task here
+        
         LV_LOG_USER("Button clicked! Starting operation.");
 
-        // Optionally revert the text after a delay or task completion
+
     }
 }
 
 lv_obj_t * create_button(lv_obj_t * parent, const char * icon, const char * txt, lv_event_cb_t event_cb, uint32_t button_id) {
-    // 1. Create the container (menu row)
     lv_obj_t * cont = lv_menu_cont_create(parent);
 
-    // 2. Add the icon label
     lv_obj_t * icon_label = lv_label_create(cont);
     lv_label_set_text(icon_label, icon);
-    // Standard menu items automatically handle the layout of the icon and text
     
-    // 3. Add the main text label
     lv_obj_t * label = lv_label_create(cont);
     lv_label_set_text(label, txt);
 
-    // --- Button Specific Elements ---
-
-    // 4. Create the button object
     lv_obj_t * btn = lv_button_create(cont);
-    // Set size to wrap content, allowing flex layout to position it correctly on the right
     lv_obj_set_size(btn, LV_SIZE_CONTENT, LV_SIZE_CONTENT); 
     
-    // 5. Add a label to the button (What action it performs)
     lv_obj_t * btn_label = lv_label_create(btn);
     lv_label_set_text(btn_label, "Select");
-    lv_obj_center(btn_label); // Center the text within the button
+    lv_obj_center(btn_label);
 
     lv_obj_set_user_data(btn, (void *)(intptr_t)button_id);
-    // 6. Assign the event handler
     if (event_cb != NULL) {
         lv_obj_add_event_cb(btn, event_cb, LV_EVENT_CLICKED, NULL);
     }
@@ -253,21 +188,14 @@ lv_obj_t * create_button(lv_obj_t * parent, const char * icon, const char * txt,
 static void switch_event_handler(lv_event_t * e) {
     lv_event_code_t code = lv_event_get_code(e); 
     
-    // Check if the event is a value change (switch was toggled)
     if (code == LV_EVENT_VALUE_CHANGED) {
-        // 1. Get the LVGL object (the switch itself)
         lv_obj_t * sw = (lv_obj_t *)lv_event_get_target(e); 
-        
-        // 2. Retrieve the pointer to the external boolean state variable
-        // This pointer was stored in the user_data when the switch was created.
         bool * state_ptr = (bool *)lv_obj_get_user_data(sw); 
         
         if (state_ptr != NULL) {
-            // 3. Update the boolean variable based on the switch state
             bool new_state = lv_obj_has_state(sw, LV_STATE_CHECKED);
             *state_ptr = new_state;
             
-            // Log the change
             LV_LOG_USER("Switch toggled. External state is now: %s", new_state ? "true" : "false");
         } else {
             LV_LOG_WARN("Switch handler called, but state pointer is NULL!");
@@ -277,23 +205,13 @@ static void switch_event_handler(lv_event_t * e) {
 
 static lv_obj_t * create_switch(lv_obj_t * parent, const char * icon, const char * txt, bool * external_state_ptr)
 {
-    // Assume create_text creates the container (obj) and icon/label elements
     lv_obj_t * obj = create_text(parent, icon, txt,LV_MENU_ITEM_BUILDER_VARIANT_1);
-
     lv_obj_t * sw = lv_switch_create(obj);
-    
-    // 1. Set the initial state of the switch from the external variable
     if (external_state_ptr != NULL && *external_state_ptr) {
         lv_obj_add_state(sw, LV_STATE_CHECKED);
     }
 
-    // 2. --- STORE THE POINTER ---
-    // Store the address of the external boolean in the switch's user data.
     lv_obj_set_user_data(sw, (void *)external_state_ptr);
-
-    // 3. --- ATTACH THE HANDLER ---
-    // Use LV_EVENT_VALUE_CHANGED, which fires only when the switch state changes.
-    // The last argument is NULL because the data (the pointer) is already on the object.
     lv_obj_add_event_cb(sw, switch_event_handler, LV_EVENT_VALUE_CHANGED, NULL);
 
     return obj;
@@ -322,44 +240,15 @@ void lv_example_menu_5(void)
     lv_obj_t * cont;
     lv_obj_t * section;
 
-    /*Create sub pages*/
+    //Create sub pages
     lv_obj_t * sub_red_page = lv_menu_page_create(menu, NULL);
-    lv_obj_set_style_pad_hor(sub_red_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(menu), 0), 0);
-    lv_menu_separator_create(sub_red_page);
-    section = lv_menu_section_create(sub_red_page);
-    std::vector<int> receivedVector = get_auto_ids(0);
-    iterations = 0;
-    for (int val : receivedVector) {
-        create_button(section, LV_SYMBOL_PLAY, get_auton_name(0,val), button_event_handler, val);
-        iterations++;
-    }
+    create_sub_section(sub_red_page,0,menu,section);
 
-
-    
     lv_obj_t * sub_blue_page = lv_menu_page_create(menu, NULL);
-    lv_obj_set_style_pad_hor(sub_blue_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(menu), 0), 0);
-    lv_menu_separator_create(sub_blue_page);
-    section = lv_menu_section_create(sub_blue_page);
-    
-    receivedVector = get_auto_ids(1);
-    
-    iterations = 0;
-    for (int val : receivedVector) {
-        create_button(section, LV_SYMBOL_PLAY, get_auton_name(1,val), button_event_handler, val);
-        iterations++;
-    }
+    create_sub_section(sub_blue_page,1,menu,section);
 
     lv_obj_t * sub_skills_page = lv_menu_page_create(menu, NULL);
-    lv_obj_set_style_pad_hor(sub_skills_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(menu), 0), 0);
-    lv_menu_separator_create(sub_skills_page);
-    section = lv_menu_section_create(sub_skills_page);
-    receivedVector = get_auto_ids(2);
-    
-    iterations = 0;
-    for (int val : receivedVector) {
-        create_button(section, LV_SYMBOL_GPS, get_auton_name(2,val), button_event_handler, val);
-        iterations++;
-    }
+    create_sub_section(sub_skills_page,2,menu,section);
 
 
     lv_obj_t * sub_selections_page = lv_menu_page_create(menu, NULL);
@@ -379,7 +268,7 @@ void lv_example_menu_5(void)
         create_text(section, NULL, selected_auto_str.c_str(), LV_MENU_ITEM_BUILDER_VARIANT_1);
     }
     
-    /*Create a root page*/
+    //Create a root page
     root_page = lv_menu_page_create(menu, "Autos");
     lv_obj_set_style_pad_hor(root_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(menu), 0), 0);
     section = lv_menu_section_create(root_page);
@@ -402,13 +291,6 @@ void lv_example_menu_5(void)
     lv_obj_send_event(lv_obj_get_child(lv_obj_get_child(lv_menu_get_cur_sidebar_page(menu), 0), 0), LV_EVENT_CLICKED,
                       NULL);
 }
-
-
-
-
-
-
-
 
  #endif
 

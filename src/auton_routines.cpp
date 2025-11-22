@@ -4,10 +4,6 @@
 #include "lemlib/api.hpp"
 #include "robot_afunc.hpp"
 
-
-
-
-
 namespace auton_routes {
 
 // === RED AUTONS === //

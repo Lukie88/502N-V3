@@ -40,6 +40,7 @@ void poseDebugTask(void*) {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+  pros::Task lvgl_handler(lvgl_task, NULL, "LVGL Handler");
   chassis.calibrate(); // calibrate sensors
   chassis.setPose(0,0,0); // set starting position (x, y, heading)
   controller.rumble(".");
@@ -57,7 +58,6 @@ void disabled() {
   // a`(controller.get_digital_new_press(DIGITAL_B)){auton_menus();}
   //auton_menus();
   lv_example_menu_5();
-
 }
 
 /**
@@ -123,8 +123,9 @@ pros::Task::delay(2000);*/
 void opcontrol() {
 
   //clear_screen();
+  disabled();
 	while (true) {
-    
+  
   int forward = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
   int turn    = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 

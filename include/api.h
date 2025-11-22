@@ -31,6 +31,7 @@
 #include <any>
 #include <iostream>
 #include <string>
+#include <vector>
 #else /* (not) __cplusplus */
 #include <errno.h>
 #include <math.h>

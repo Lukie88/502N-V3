@@ -1,6 +1,8 @@
 #include "api.h"
 #include "lemlib/api.hpp"
 #include "pros/optical.hpp"
+#pragma once
+#include "distance_relocalization.hpp"
 
 
 
@@ -8,8 +10,8 @@
 inline pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 //motors
-inline pros::MotorGroup left_mg({6, -5, -10}, pros::MotorGearset::blue);
-inline pros::MotorGroup right_mg({-19, 18, 17}, pros::MotorGearset::blue);
+inline pros::MotorGroup left_mg({8, -6, -7}, pros::MotorGearset::blue); 
+inline pros::MotorGroup right_mg({-19, 17, 18}, pros::MotorGearset::blue); // 17,18,19 rev
 
 inline lemlib::Drivetrain drivetrain(&left_mg, // left motor group
                               &right_mg, // right motor group
@@ -21,20 +23,20 @@ inline lemlib::Drivetrain drivetrain(&left_mg, // left motor group
 
 // --- Intake motors (renamed by role in comments) ---
 // 11W main intake
-inline pros::Motor intakeMain(8, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+inline pros::Motor intakeMain(9, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
 // Body 5.5W (formerly half intake 1)
-inline pros::Motor intakescore(-7, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+inline pros::Motor intakescore(-4, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
 // Scoring 5.5W (formerly half intake 2)
-inline pros::Motor intakemid(-9, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+inline pros::Motor intakemid(-10, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
 
 
 
 // --- Keep ONLY the A-button mechanism (downward actuator) ---
-inline pros::adi::Pneumatics pistonload('A', false); // match-load / downward mechanism
+inline pros::adi::Pneumatics pistonload('C', false); // match-load / downward mechanism
 // Wing Mechanism- Button L2
-inline pros::adi::Pneumatics pistonWing('B', false); // match-load / downward mechanism
+inline pros::adi::Pneumatics pistonWing('D', false); // wing / downward mechanism
 // Piston odom
-inline pros::adi::Pneumatics pistonodom('c', false); // match-load / downward mechanism
+inline pros::adi::Pneumatics pistonodom('B', false); // match-load / downward mechanism
 
 // Optical Sensors
 inline pros::Optical sorterOptical(12);
@@ -42,9 +44,9 @@ inline pros::Optical sorterOptical(12);
 // Inertial Sensor
 inline pros::Imu imu_sensor(15);
 // horizontal tracking wheel rotational sensor
-inline pros::Rotation horizontal_sensor(-14);
+inline pros::Rotation horizontal_sensor(-16);
 // vertical tracking wheel rotational sensor
-inline pros::Rotation vertical_sensor(-16);
+inline pros::Rotation vertical_sensor(-1);
 
 // horizontal tracking wheel
 inline lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_sensor, lemlib::Omniwheel::NEW_275_HALF, 2.85);
@@ -89,3 +91,23 @@ inline lemlib::Chassis chassis(drivetrain, // drivetrain settings
                         angular_controller, // angular PID settings
                         sensors // odometry sensors
 );
+
+
+// Offsets are measured in robot frame: +X forward, +Y to the left.
+inline constexpr relocalize::SensorOffset DIST_BACK_OFFSET{-6.0, 0.0};  // behind center
+inline constexpr relocalize::SensorOffset DIST_LEFT_OFFSET{0.0, 6.0};   // left of center
+inline constexpr relocalize::SensorOffset DIST_RIGHT_OFFSET{0.0, -6.0}; // right of center
+
+inline pros::Distance distBack(1);
+inline pros::Distance distLeft(2);
+inline pros::Distance distRight(3);
+
+// Customize which walls each sensor is expected to see for relocalization. someting is a bit off here
+// Example: back sensor points toward bottom wall (Y_NEG), left toward left wall (X_NEG), right toward right wall (X_POS).
+inline relocalize::DistanceSensorConfig distanceSensorConfigs[] = {
+    {&distBack, DIST_BACK_OFFSET, -1.0, 0.0, relocalize::WallAxis::Y_NEG},
+    {&distLeft, DIST_LEFT_OFFSET, 0.0, -1.0, relocalize::WallAxis::X_NEG},
+    {&distRight, DIST_RIGHT_OFFSET, 0.0, 1.0, relocalize::WallAxis::X_POS},
+};
+
+inline constexpr int DIST_SENSOR_COUNT = sizeof(distanceSensorConfigs) / sizeof(distanceSensorConfigs[0]);

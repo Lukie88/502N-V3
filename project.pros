@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "502N V3/",
+    "project_name": "Auton Left",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -635,9 +635,9 @@
       }
     },
     "upload_options": {
-      "icon": "power",
+      "icon": "pros",
       "slot": 1,
-      "description": "Nov 21 CoderDg "
+      "description": "Left"
     },
     "use_early_access": false
   }

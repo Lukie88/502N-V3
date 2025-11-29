@@ -58,9 +58,13 @@ DriveOutput calc_ez_arcade(int throttle, int turn) {
 // ----- CURVATHERP MATH ----- //
 
 DriveOutput calc_curvatherp(int throttle, int turn) {
-    // Curve inputs
-    double forward_stick = pilonCurve(throttle, 127.0f, CONTROLLER_THROTTLE_CURVE);
-    double turn_stick    = pilonCurve(turn,     127.0f, CONTROLLER_TURN_CURVE);
+    // 1) Apply deadband
+    int throttle_db = deadband(throttle, CONTROLLER_THROTTLE_DEADBAND);
+    int turn_db     = deadband(turn,     CONTROLLER_TURN_DEADBAND);
+
+    // 2) Curve inputs
+    double forward_stick = pilonCurve(throttle_db, 127.0f, CONTROLLER_THROTTLE_CURVE);
+    double turn_stick    = pilonCurve(turn_db,     127.0f, CONTROLLER_TURN_CURVE);
 
     // Compute blend factor based on forward magnitude
     double interpolator =
@@ -95,8 +99,11 @@ DriveOutput calc_curvatherp(int throttle, int turn) {
     double rightPower =
         right_curvature * interpolator + right_tank * (1.0 - interpolator);
 
-    return { static_cast<float>(leftPower  * 127.0),
-             static_cast<float>(rightPower * 127.0) };
+constexpr double DRIVE_SCALE = 1.0; // tune later when needed
+
+return { static_cast<float>(leftPower  * 127.0 * DRIVE_SCALE),
+         static_cast<float>(rightPower * 127.0 * DRIVE_SCALE) };
+
 }
 
 void drive_distance_inches(double inches, int speed) {

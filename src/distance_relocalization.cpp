@@ -47,7 +47,7 @@ bool computePoseFromDistanceSensors(
         // P = C + off_w + m * dir_w hits the known wall -> solve for Cx or Cy.
         switch (cfg.wall) {
             case WallAxis::X_POS: {
-                if (std::abs(dirXw) <= 1e-6) break; // beam not pointing toward the wall line
+                if (std::abs(dirXw) <= 1e-6) {break;} // beam not pointing toward the wall line
                 const double wallX = FIELD_HALF_IN;
                 const double cx = wallX - (offXw + m * dirXw);
                 sumX += cx;
@@ -55,7 +55,7 @@ bool computePoseFromDistanceSensors(
                 break;
             }
             case WallAxis::X_NEG: {
-                if (std::abs(dirXw) <= 1e-6) break; // beam not pointing toward the wall line
+                if (std::abs(dirXw) <= 1e-6) {break;} // beam not pointing toward the wall line
                 const double wallX = -FIELD_HALF_IN;
                 const double cx = wallX - (offXw + m * dirXw);
                 sumX += cx;
@@ -63,7 +63,7 @@ bool computePoseFromDistanceSensors(
                 break;
             }
             case WallAxis::Y_POS: {
-                if (std::abs(dirYw) <= 1e-6) break; // beam not pointing toward the wall line
+                if (std::abs(dirYw) <= 1e-6) {break;} // beam not pointing toward the wall line
                 const double wallY = FIELD_HALF_IN;
                 const double cy = wallY - (offYw + m * dirYw);
                 sumY += cy;
@@ -71,7 +71,7 @@ bool computePoseFromDistanceSensors(
                 break;
             }
             case WallAxis::Y_NEG: {
-                if (std::abs(dirYw) <= 1e-6) break; // beam not pointing toward the wall line
+                if (std::abs(dirYw) <= 1e-6) {break;} // beam not pointing toward the wall line
                 const double wallY = -FIELD_HALF_IN;
                 const double cy = wallY - (offYw + m * dirYw);
                 sumY += cy;

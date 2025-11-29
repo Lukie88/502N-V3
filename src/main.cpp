@@ -12,33 +12,6 @@
 #include "robot_afunc.hpp"
 
 
-// void on_center_button() {
-// 	static bool pressed = false;
-// 	pressed = !pressed;
-// 	if (pressed) {
-// 		pros::lcd::set_text(2, "I was pressed!");
-// 	} else {
-// 		pros::lcd::clear_line(2);
-// 	}
-// }
-// void poseDebugTask(void*) {
-//     while (true) {
-//         lemlib::Pose pose = chassis.getPose(); // (x, y, heading)
-        
-//         pros::lcd::print(0, "X: %.2f in", pose.x);
-//         pros::lcd::print(1, "Y: %.2f in", pose.y);
-//         pros::lcd::print(2, "H: %.2f deg", pose.theta);
-//         pros::lcd::print(0, "X: %.2f in", pose.x);
-//         pros::lcd::print(1, "Y: %.2f in", pose.y);
-//         pros::lcd::print(2, "H: %.2f deg", pose.theta);
-
-//         pros::delay(50); // update ~20 times/sec
-//     }
-// }
-//         pros::delay(50); // update ~20 times/sec
-//     }
-// }
-
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *

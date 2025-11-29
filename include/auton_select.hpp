@@ -30,7 +30,6 @@ static lv_obj_t * create_switch(lv_obj_t * parent,
                                 bool * external_state_ptr);
 lv_obj_t * create_button(lv_obj_t * parent, const char * icon, const char * txt, lv_event_cb_t event_cb, uint32_t button_id);
 void lvgl_task(void* param);
-void lv_example_menu_5(void);
 void run_selected_auton();
 void brain_menu(void);
 void run_selected_auton();

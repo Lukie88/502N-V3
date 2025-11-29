@@ -6,33 +6,11 @@
 #include "portconfig.hpp"
 #include "auton_select.hpp"
 #include "auton_routines.hpp"
-#include "Main_Drive.hpp"
+#include "main_drive.hpp"
 #include "pros/misc.hpp"
 #include "pros/rtos.hpp"
 #include "robot_afunc.hpp"
 
-
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
-}
-
-void poseDebugTask(void*) {
-    while (true) {
-        lemlib::Pose pose = chassis.getPose(); // (x, y, heading)
-
-        pros::lcd::print(0, "X: %.2f in", pose.x);
-        pros::lcd::print(1, "Y: %.2f in", pose.y);
-        pros::lcd::print(2, "H: %.2f deg", pose.theta);
-
-        pros::delay(50); // update ~20 times/sec
-    }
-}
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -41,23 +19,24 @@ void poseDebugTask(void*) {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize(); // initialize brain screen
   chassis.calibrate(); // calibrate sensors
-  // chassis.setPose(0,0,0); // set starting position (x, y, heading)
+  chassis.setPose(0,0,0); // set starting position (x, y, heading)
+  init_sorter_sensor();
   controller.rumble(".");
   init_sorter_sensor();
-  static pros::Task poseTask(poseDebugTask,nullptr);
+  pros::delay(500);
+  brain_menu();
+  pros::Task lvgl_handler(lvgl_task, NULL, "LVGL Handler");
+  controller.rumble(".-.");
   pros::delay(20); // update every 20 ms
-  
 }
-
+//test
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-  auton_menus();
 }
 
 /**
@@ -84,9 +63,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-
-auton_routes::red_1();   
-
+run_selected_auton();
 }
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -105,12 +82,7 @@ auton_routes::red_1();
 
 void opcontrol() {
 
-pistonodom.set_value(true); 
-pistonWing.set_value(true);
-chassis.setPose(-48,15,90);
-
-
-  while (true) {
+	while (true) {
   
   int forward = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
   int turn    = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);

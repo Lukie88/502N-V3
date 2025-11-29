@@ -1,10 +1,8 @@
 #include "auton_routines.hpp"
-#include "Main_Drive.hpp"
-#include "Portconfig.hpp"
+#include "main_drive.hpp"
+#include "portconfig.hpp"
 #include "lemlib/api.hpp"
 #include "robot_afunc.hpp"
-
-
 
 namespace auton_routes {
 
@@ -27,6 +25,7 @@ chassis.moveToPose(-8, 8, -45, 2000,{.forwards=false,.lead=0.1,  .maxSpeed=80});
 pros::delay(1000);
 stopIntakes();
 pros::delay(500);
+runOuttake();
 runOuttake();
 pros::Task::delay(100);
 scoreMiddleGoal();

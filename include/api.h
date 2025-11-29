@@ -28,7 +28,10 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
+#include <any>
 #include <iostream>
+#include <string>
+#include <vector>
 #else /* (not) __cplusplus */
 #include <errno.h>
 #include <math.h>
@@ -77,6 +80,8 @@
 #include "pros/rtos.hpp"
 #include "pros/screen.hpp"
 #include "pros/vision.hpp"
+
+#include "liblvgl/lvgl.h"
 #endif
 
 #endif  // _PROS_API_H_

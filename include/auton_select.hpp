@@ -1,18 +1,35 @@
 #pragma once
+#include <vector>
+#include "liblvgl/lvgl.h"
 
-#include "main.h"       
+typedef enum {
+    LV_MENU_ITEM_BUILDER_VARIANT_1,
+    LV_MENU_ITEM_BUILDER_VARIANT_2
+} lv_menu_builder_variant_t;
+
+std::vector<int> get_auto_ids(short int section);
+static void switch_event_handler(lv_event_t * e);
+static void button_event_handler(lv_event_t * e);
+
+static lv_obj_t * create_text(lv_obj_t * parent, 
+                              const char * icon, 
+                              const char * txt,
+                              lv_menu_builder_variant_t builder_variant);
 
 
+static lv_obj_t * create_slider(lv_obj_t * parent,
+                                const char * icon,
+                                const char * txt,
+                                int32_t min, 
+                                int32_t max, 
+                                int32_t val);
 
-int get_selected_auto();
-void auton_menus();
-void clear_screen();
-void red_menu();
-void blue_menu();
-void skills_menu();
-void driving_skills_menu();
-void main_menu_grid();
-void draw_hollow_rect(int x0, int y0, int x1, int y1, pros::Color color);
-bool is_touch_in_rect(int x, int y, int x1, int y1, int x2, int y2);
-void outline_section(short int section, pros::Color color);
-short int touch_registration(short int x, short int y);
+static lv_obj_t * create_switch(lv_obj_t * parent,
+                                const char * icon,
+                                const char * txt,
+                                bool * external_state_ptr);
+lv_obj_t * create_button(lv_obj_t * parent, const char * icon, const char * txt, lv_event_cb_t event_cb, uint32_t button_id);
+void lvgl_task(void* param);
+void run_selected_auton();
+void brain_menu(void);
+void run_selected_auton();

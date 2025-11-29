@@ -37,6 +37,9 @@ void autonomous() {run_selected_auton();
 
 void opcontrol() {
   controller.print(0, 0, "Clr:%-4s", sorter_alliance_name(get_sorter_alliance()));
+  pistonodom.set_value(true); 
+pistonWing.set_value(true);
+
 	while (true) {
   
   int forward = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);

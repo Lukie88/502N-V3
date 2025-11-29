@@ -13,25 +13,38 @@ short int selected_section = 0;   // 0 = red, 1 = blue, 2 = skills, 3 = driving 
 std::string auton_names = "";
 bool show_selected_auto = false;
 
+
+using FunctionPointer = std::function<void()>;
 struct auton_data{
     short int catagory;
     short int auton_val;
     std::string func_name;
+    FunctionPointer func;
 };
 
-auton_data autolist[8] = {
-    {0, 1,"red left"},
-    {0, 2,"red right"},
-    {0, 3,"red_3"},
-    {1, 4,"blue left"},
-    {1, 5,"blue right"},
-    {1, 6,"blue_3"},
-    {2, 7,"skills_auton_routine"},
-    {3, 8,"skills_driving_routine"}
+const auton_data autolist[8] = {
+//   id | cat |    name                |   function pointer
+    {0  , 1   ,"red left"              ,auton_routes::red_1},
+    {0  , 2   ,"red right"             ,auton_routes::red_2},
+    {0  , 3   ,"red 3"                 ,auton_routes::red_3},
+    {1  , 4   ,"blue left"             ,auton_routes::blue_1},
+    {1  , 5   ,"blue right"            ,auton_routes::blue_2},
+    {1  , 6   ,"blue 3"                ,auton_routes::blue_3},
+    {2  , 7   ,"skills auton routine"  ,auton_routes::skills_auton_routine},
+    {3  , 8   ,"skills driving routine",auton_routes::skills_driving_routine}
 };
+//HOW TO USE THIS
+//first column is the section (red:0, blue:1, skills:2, driving skills:3)
+//second column is the auton ID (just add 1 from the previous)
+//third column is the name that shows up on the brain menu
+//fourth column is the function pointer to the auton routine (just add the function name from auton_routines.hpp)
+
 const int AUTOLIST_SIZE = sizeof(autolist) / sizeof(auton_data);
 
 
+
+
+void run_selected_auton() {autolist[selected_auto-1].func();}
 
 
 std::vector<int> get_auto_ids(short int section){
@@ -272,20 +285,8 @@ void brain_menu(void)
 
     lv_menu_set_sidebar_page(menu, root_page);
 
-    lv_obj_send_event(lv_obj_get_child(lv_obj_get_child(lv_menu_get_cur_sidebar_page(menu), 0), 0), LV_EVENT_CLICKED,
-                      NULL);
+    lv_obj_send_event(lv_obj_get_child(lv_obj_get_child(lv_menu_get_cur_sidebar_page(menu), 0), 0), LV_EVENT_CLICKED,NULL);
 }
 
 #endif
 
-void run_selected_auton() {
-    switch (selected_auto) {
-        case 1:auton_routes::red_1();break;
-        case 2:auton_routes::red_2();break;
-        case 3:auton_routes::red_3();break;
-        case 4:auton_routes::blue_1();break;
-        case 5:auton_routes::blue_2();break;
-        case 6:auton_routes::blue_3();break;
-        case 7:auton_routes::skills_auton_routine();break;
-        case 8:auton_routes::skills_driving_routine();break;
-        default:break;}}

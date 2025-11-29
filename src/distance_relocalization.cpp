@@ -4,8 +4,6 @@
 
 namespace relocalize {
 
-constexpr double PI_D = 3.14159265358979323846;
-
 bool computePoseFromDistanceSensors(
     const DistanceSensorConfig* sensors,
     int sensorCount,
@@ -14,7 +12,7 @@ bool computePoseFromDistanceSensors(
 ) {
     if (sensors == nullptr || sensorCount <= 0) return false;
 
-    const double thetaRad = currentPose.theta * PI_D / 180.0;
+    const double thetaRad = currentPose.theta * M_PI / 180.0;
     const double cosT = std::cos(thetaRad);
     const double sinT = std::sin(thetaRad);
 

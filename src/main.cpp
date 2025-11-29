@@ -25,17 +25,11 @@ void initialize() {
   pros::delay(20); // update every 20 ms
 }
 
-void disabled() {
-}
+void disabled() {}
 
-void competition_initialize() {
-}
+void competition_initialize() {}
 
-void autonomous() {
-run_selected_auton();
-}
-
-
+void autonomous() {run_selected_auton();}
 
 void opcontrol() {
 
@@ -84,10 +78,10 @@ void opcontrol() {
 if (controller.get_digital_new_press(DIGITAL_RIGHT)) {
  pistonload.toggle();}
 
- if (controller.get_digital_new_press(DIGITAL_L2)) {
+if (controller.get_digital_new_press(DIGITAL_L2)) {
  pistonWing.toggle();}
  pros::delay(20); 
-  if (controller.get_digital_new_press(DIGITAL_A)) {
+if (controller.get_digital_new_press(DIGITAL_A)) {
  pistonodom.toggle();}
  pros::delay(20); 
 }

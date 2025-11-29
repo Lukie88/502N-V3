@@ -45,6 +45,7 @@ void initialize() {
   controller.rumble(".");
   init_sorter_sensor();
   pros::delay(500);
+  brain_menu();
   pros::Task lvgl_handler(lvgl_task, NULL, "LVGL Handler");
   controller.rumble(".-.");
   pros::delay(20); // update every 20 ms
@@ -56,9 +57,6 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-  // a`(controller.get_digital_new_press(DIGITAL_B)){auton_menus();}
-  //auton_menus();
-  brain_menu();
 }
 
 /**
@@ -71,7 +69,7 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
-  
+
 }
 
 /**
@@ -86,25 +84,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-auton_routes::red_1();
-
-
-
-/*chassis.setPose(-56,-15,180);8
-setWingDescore(true);
-runIntakeStore();
-chassis.moveToPose(-48, -46, 180,1500,{.maxSpeed=127});
-chassis.moveToPose(-65.159,-46.139, -90,1500,{.forwards=false,.maxSpeed=127});
-chassis.moveToPose(-63, -47, -90,1200,{.maxSpeed=127});
-pros::Task::delay(200);
-setMatchLoad(true);
-runIntakeStore();
-pros::Task::delay(2000);*/
-
-
-
-    
-
+run_selected_auton();
 }
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -124,7 +104,6 @@ pros::Task::delay(2000);*/
 void opcontrol() {
 
   //clear_screen();
-  disabled();
 	while (true) {
   
   int forward = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);

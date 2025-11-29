@@ -13,8 +13,6 @@ short int selected_section = 0;   // 0 = red, 1 = blue, 2 = skills, 3 = driving 
 std::string auton_names = "";
 bool show_selected_auto = false;
 
-
-
 struct auton_data{
     short int catagory;
     short int auton_val;
@@ -22,11 +20,11 @@ struct auton_data{
 };
 
 auton_data autolist[8] = {
-    {0, 1,"red_1"},
-    {0, 2,"red_2"},
+    {0, 1,"red left"},
+    {0, 2,"red right"},
     {0, 3,"red_3"},
-    {1, 4,"blue_1"},
-    {1, 5,"blue_2"},
+    {1, 4,"blue left"},
+    {1, 5,"blue right"},
     {1, 6,"blue_3"},
     {2, 7,"skills_auton_routine"},
     {3, 8,"skills_driving_routine"}
@@ -40,9 +38,7 @@ std::vector<int> get_auto_ids(short int section){
     std::vector<int> list_of_ids;
     for (int i = 0; i < 8; i++){
         if (autolist[i].catagory == section){
-            list_of_ids.push_back(autolist[i].auton_val);
-        }
-    }
+            list_of_ids.push_back(autolist[i].auton_val);}}
     return list_of_ids;
 }
 
@@ -53,17 +49,14 @@ const char *get_auton_name(int group_param, int routine_param) {
             return autolist[i].func_name.c_str();
         }
     }
-    
-    return "UNKNOWN_AUTON_ROUTINE";
+    return "UNKNOWN_AUTON_ROUTINE"; //panik
 }
 
 void lvgl_task(void* param) {
     while (true) {
-        lv_tick_inc(10); 
-        // Process all pending LVGL tasks (drawing, layout, input handling)
+        lv_tick_inc(15);
         lv_timer_handler();
-        pros::delay(10);
-    }
+        pros::delay(15);}
 }
 
 void create_sub_section(lv_obj_t * sub_page, short int section_param,lv_obj_t * menu,lv_obj_t * &section) {
@@ -73,7 +66,7 @@ void create_sub_section(lv_obj_t * sub_page, short int section_param,lv_obj_t * 
     std::vector<int> receivedVector = get_auto_ids(section_param);
     short int iterations = 0;
     for (int val : receivedVector) {
-        create_button(section, LV_SYMBOL_PLAY, get_auton_name(0,val), button_event_handler, val);
+        create_button(section, LV_SYMBOL_PLAY, get_auton_name(section_param,val), button_event_handler, val);
         iterations++;
     }
 
@@ -81,8 +74,11 @@ void create_sub_section(lv_obj_t * sub_page, short int section_param,lv_obj_t * 
 #if LV_USE_MENU && LV_USE_MSGBOX && LV_BUILD_EXAMPLES
 lv_obj_t * root_page;
 
-static lv_obj_t * create_text(lv_obj_t * parent, const char * icon, const char * txt,
+static lv_obj_t * create_text(lv_obj_t * parent,
+                              const char * icon,
+                              const char * txt,
                               lv_menu_builder_variant_t builder_variant){
+
     lv_obj_t * obj = lv_menu_cont_create(parent);
     lv_obj_t * img = NULL;
     lv_obj_t * label = NULL;
@@ -132,7 +128,6 @@ static void button_event_handler(lv_event_t * e) {
     if (code == LV_EVENT_CLICKED) {
         lv_obj_t * btn = (lv_obj_t *)lv_event_get_target(e);
         lv_obj_t * section = lv_obj_get_parent(lv_obj_get_parent(btn)); 
-
         uint32_t child_count = lv_obj_get_child_count(section);
         
         for (uint32_t i = 0; i < child_count; i++) {
@@ -154,10 +149,7 @@ static void button_event_handler(lv_event_t * e) {
         lv_obj_t * label = lv_obj_get_child(btn, 0);
         lv_label_set_text(label, "Selected");
 
-        
         LV_LOG_USER("Button clicked! Starting operation.");
-
-
     }
 }
 
@@ -181,7 +173,6 @@ lv_obj_t * create_button(lv_obj_t * parent, const char * icon, const char * txt,
     if (event_cb != NULL) {
         lv_obj_add_event_cb(btn, event_cb, LV_EVENT_CLICKED, NULL);
     }
-    
     return cont;
 }
 
@@ -191,11 +182,9 @@ static void switch_event_handler(lv_event_t * e) {
     if (code == LV_EVENT_VALUE_CHANGED) {
         lv_obj_t * sw = (lv_obj_t *)lv_event_get_target(e); 
         bool * state_ptr = (bool *)lv_obj_get_user_data(sw); 
-        
         if (state_ptr != NULL) {
             bool new_state = lv_obj_has_state(sw, LV_STATE_CHECKED);
             *state_ptr = new_state;
-            
             LV_LOG_USER("Switch toggled. External state is now: %s", new_state ? "true" : "false");
         } else {
             LV_LOG_WARN("Switch handler called, but state pointer is NULL!");
@@ -208,8 +197,7 @@ static lv_obj_t * create_switch(lv_obj_t * parent, const char * icon, const char
     lv_obj_t * obj = create_text(parent, icon, txt,LV_MENU_ITEM_BUILDER_VARIANT_1);
     lv_obj_t * sw = lv_switch_create(obj);
     if (external_state_ptr != NULL && *external_state_ptr) {
-        lv_obj_add_state(sw, LV_STATE_CHECKED);
-    }
+        lv_obj_add_state(sw, LV_STATE_CHECKED);}
 
     lv_obj_set_user_data(sw, (void *)external_state_ptr);
     lv_obj_add_event_cb(sw, switch_event_handler, LV_EVENT_VALUE_CHANGED, NULL);
@@ -228,11 +216,8 @@ void brain_menu(void)
 
     lv_color_t bg_color = lv_obj_get_style_bg_color(menu, 0);
     if(lv_color_brightness(bg_color) > 127) {
-        lv_obj_set_style_bg_color(menu, lv_color_darken(lv_obj_get_style_bg_color(menu, 0), 10), 0);
-    }
-    else {
-        lv_obj_set_style_bg_color(menu, lv_color_darken(lv_obj_get_style_bg_color(menu, 0), 50), 0);
-    }
+        lv_obj_set_style_bg_color(menu, lv_color_darken(lv_obj_get_style_bg_color(menu, 0), 10), 0);}
+    else {lv_obj_set_style_bg_color(menu, lv_color_darken(lv_obj_get_style_bg_color(menu, 0), 50), 0);}
     
     lv_obj_set_size(menu, lv_display_get_horizontal_resolution(NULL), lv_display_get_vertical_resolution(NULL));
     lv_obj_center(menu);
@@ -277,7 +262,7 @@ void brain_menu(void)
     lv_menu_set_load_page_event(menu, cont, sub_blue_page);
     cont = create_text(section, LV_SYMBOL_GPS, "Skills", LV_MENU_ITEM_BUILDER_VARIANT_1);
     lv_menu_set_load_page_event(menu, cont, sub_skills_page);
-
+    
     create_text(root_page, NULL, "Debug", LV_MENU_ITEM_BUILDER_VARIANT_1);
     section = lv_menu_section_create(root_page);
     cont = create_text(section, LV_SYMBOL_EYE_OPEN, "Selections", LV_MENU_ITEM_BUILDER_VARIANT_1);
@@ -293,3 +278,14 @@ void brain_menu(void)
 
 #endif
 
+void run_selected_auton() {
+    switch (selected_auto) {
+        case 1:auton_routes::red_1();break;
+        case 2:auton_routes::red_2();break;
+        case 3:auton_routes::red_3();break;
+        case 4:auton_routes::blue_1();break;
+        case 5:auton_routes::blue_2();break;
+        case 6:auton_routes::blue_3();break;
+        case 7:auton_routes::skills_auton_routine();break;
+        case 8:auton_routes::skills_driving_routine();break;
+        default:break;}}

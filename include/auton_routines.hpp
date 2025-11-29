@@ -18,4 +18,7 @@ namespace auton_routes {
     // Skills
     void skills_auton_routine();
     void skills_driving_routine();
+
+    //unselected
+    void unselected_auton_routine();
 }

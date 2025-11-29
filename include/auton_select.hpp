@@ -7,6 +7,8 @@ typedef enum {
     LV_MENU_ITEM_BUILDER_VARIANT_2
 } lv_menu_builder_variant_t;
 
+bool color_selected = false;
+
 void run_selected_auton();
 
 std::vector<int> get_auto_ids(short int section);

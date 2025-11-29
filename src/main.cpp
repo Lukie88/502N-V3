@@ -16,12 +16,12 @@ void initialize() {
   chassis.calibrate(); // calibrate sensors
   chassis.setPose(0,0,0); // set starting position (x, y, heading)
   init_sorter_sensor();
-  controller.rumble(".");
+  controller.rumble("."); // main systems calibrated
   init_sorter_sensor();
   pros::delay(500);
   brain_menu();
   pros::Task lvgl_handler(lvgl_task, NULL, "LVGL Handler");
-  controller.rumble(".-.");
+  controller.rumble(".-."); // gui operational
   pros::delay(20); // update every 20 ms
 }
 
@@ -32,7 +32,7 @@ void competition_initialize() {}
 void autonomous() {run_selected_auton();}
 
 void opcontrol() {
-
+  controller.print(0, 0, "Clr:%-4s", sorter_alliance_name(get_sorter_alliance()));
 	while (true) {
   
   int forward = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
@@ -44,14 +44,12 @@ void opcontrol() {
   right_mg.move(static_cast<int>(driveOut.right));
 
 // --- Intake Controls ---
+  if (color_selected) {
   if (controller.get_digital_new_press(DIGITAL_X)) {
       cycle_sorter_alliance();
       controller.print(0, 0, "Clr:%-4s", sorter_alliance_name(get_sorter_alliance()));
-  }
-  if (controller.get_digital(DIGITAL_UP)
-      && controller.get_digital(DIGITAL_DOWN)) {
-        disabled();
-  }
+  }}
+
   if (controller.get_digital_new_press(DIGITAL_B)) {
       toggle_sorter_enabled();
       controller.print(1, 0, "Sort:%s ", sorterEnabled ? "ON" : "OFF");

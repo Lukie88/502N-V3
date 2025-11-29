@@ -6,9 +6,9 @@
 #include "pros/screen.hpp"
 #include "pros/rtos.hpp"
 #include "api.h"
+#include "robot_afunc.hpp"
 
-
-short int selected_auto = 0;      // which specific auton inside a color menu (to be used later)
+short int selected_auto = 1;      // which specific auton inside a color menu (to be used later)
 short int selected_section = 0;   // 0 = red, 1 = blue, 2 = skills, 3 = driving skills
 std::string auton_names = "";
 bool show_selected_auto = false;
@@ -44,7 +44,16 @@ const int AUTOLIST_SIZE = sizeof(autolist) / sizeof(auton_data);
 
 
 
-void run_selected_auton() {autolist[selected_auto-1].func();}
+void run_selected_auton() {
+    if (selected_auto != 0) {
+        if (selected_section == 0){set_sorter_alliance(SorterAlliance::Red);}
+        else if (selected_section == 1){set_sorter_alliance(SorterAlliance::Blue);}
+        color_selected = true;
+        autolist[selected_auto-1].func();
+    }else if (selected_auto == 0){
+        color_selected = false;
+        auton_routes::unselected_auton_routine();
+    }}
 
 
 std::vector<int> get_auto_ids(short int section){

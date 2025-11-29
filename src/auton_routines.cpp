@@ -189,7 +189,7 @@ void blue_3() {
 
 void skills_auton_routine() {
    
-   chassis.setPose(-50,-15,180);
+  chassis.setPose(-50,-15,180);
   setWingDescore(true);
   runIntakeStore();
 
@@ -209,71 +209,73 @@ void skills_auton_routine() {
   pros::Task::delay(1000);
   setMatchLoad(false);
 
-//Move to other side of field
+  //Move to other side of field
   chassis.turnToHeading(90, 1000);
   chassis.moveToPose(33, -58,90, 2500, {.lead= 0.1,.maxSpeed=127});
   chassis.moveToPose(46, -45,90 , 1100, {.lead= 0.3,.maxSpeed=127});
    
-//Score on other side
+  //Score on other side
   chassis.moveToPose(16, -45,90 , 3500, {.forwards=false,.lead= 0.3,.maxSpeed=127});
   pros::Task::delay(1000);
   scoreHighGoal();
   pros::Task::delay(3000);
   
-//Intake Second Matchloaders
+  //Intake Second Matchloaders
   chassis.moveToPose(60, -46,90 ,2500, {.lead= 0.1,.maxSpeed=127});
-    runIntakeStore();
+  runIntakeStore();
   setMatchLoad(true);
   pros::Task::delay(3000);
-    chassis.moveToPose(18, -46,80 , 3500, {.forwards=false,.lead= 0.1,.maxSpeed=127});
-    pros::Task::delay(1200);
-    setMatchLoad(false);
-    scoreHighGoal();
-    pros::Task::delay(3000);
- chassis.moveToPose(43, -42.5,90 , 1000, {.lead= 0.1,.maxSpeed=127});
+  chassis.moveToPose(18, -46,80 , 3500, {.forwards=false,.lead= 0.1,.maxSpeed=127});
+  pros::Task::delay(1200);
+  setMatchLoad(false);
+  scoreHighGoal();
+  pros::Task::delay(3000);
+  chassis.moveToPose(43, -42.5,90 , 1000, {.lead= 0.1,.maxSpeed=127});
 
 //Go to 3rd intake
-runIntakeStore();
- chassis.moveToPose(43, 49,-10 , 2500, {.lead= 0.1,.maxSpeed=127});
- chassis.turnToHeading(80, 1000);
-    chassis.moveToPose(58, 47,80 , 2500, {.lead= 0.1,.maxSpeed=127});
-    setMatchLoad(true);
-    pros::Task::delay(3000);
+  runIntakeStore();
+  chassis.moveToPose(43, 49,-10 , 2500, {.lead= 0.1,.maxSpeed=127});
+  chassis.turnToHeading(80, 1000);
+  chassis.moveToPose(58, 47,80 , 2500, {.lead= 0.1,.maxSpeed=127});
+  setMatchLoad(true);
+  pros::Task::delay(3000);
 
- chassis.moveToPose(38, 66.5,90 , 1500, {.forwards=false,.lead= 0.1,.maxSpeed=127});
- pros::Task::delay(1000);
+  chassis.moveToPose(38, 66.5,90 , 1500, {.forwards=false,.lead= 0.1,.maxSpeed=127});
+  pros::Task::delay(1000);
   setMatchLoad(false);
- chassis.turnToHeading(-90, 1000);
- chassis.moveToPose(-33,56 ,-90 , 2000, {.lead= 0.1,.maxSpeed=127});
- chassis.moveToPose(-44, 42,-90 , 1500, {.lead= 0.1,.maxSpeed=127});
-chassis.moveToPose(-25, 47,-90 , 3500, {.forwards=false, .lead= 0.1,.maxSpeed=127});
- pros::Task::delay(1000);
- scoreHighGoal();
- pros::Task::delay(2500);
+  chassis.turnToHeading(-90, 1000);
+  chassis.moveToPose(-33,56 ,-90 , 2000, {.lead= 0.1,.maxSpeed=127});
+  chassis.moveToPose(-44, 42,-90 , 1500, {.lead= 0.1,.maxSpeed=127});
+  chassis.moveToPose(-25, 47,-90 , 3500, {.forwards=false, .lead= 0.1,.maxSpeed=127});
+  pros::Task::delay(1000);
+  scoreHighGoal();
+  pros::Task::delay(2500);
   chassis.moveToPose(-65, 42,-90 , 2500, {.lead= 0.3,.maxSpeed=127});
- setMatchLoad(true);
- pros::Task::delay(2500);
+  setMatchLoad(true);
+  pros::Task::delay(2500);
   chassis.moveToPose(-23, 46,-90 , 3500, {.forwards=false, .lead= 0.1,.maxSpeed=127});
- pros::Task::delay(2000);
- setMatchLoad(false);
- scoreHighGoal();
- pros::Task::delay(3000);
- stopIntakes();
+  pros::Task::delay(2000);
+  setMatchLoad(false);
+  scoreHighGoal();
+  pros::Task::delay(3000);
+  stopIntakes();
 
  
- runIntakeStore();
-   chassis.moveToPose(-43, 46,-90 , 1500, {.lead= 0.1,.maxSpeed=127});
+  runIntakeStore();
+  chassis.moveToPose(-43, 46,-90 , 1500, {.lead= 0.1,.maxSpeed=127});
   chassis.moveToPose(-64, 18,180 , 2000, {.lead= 0.5, .maxSpeed=127, });
   chassis.moveToPose(-64,-6,180,50000, {.lead= 0.1,.maxSpeed=127});
 
   setMatchLoad(true);
   drive_distance_inches(24);
-    pistonodom.set_value(true);
+  pistonodom.set_value(true);
 
 }
 
-void skills_driving_routine() {
-void opcontrol();  
-}
+
+void unselected_auton_routine() {
+  chassis.setPose(0,0,0);
+  chassis.moveToPose(0,20,0,1000,{});}
+void skills_driving_routine() {opcontrol();}
 
 } 

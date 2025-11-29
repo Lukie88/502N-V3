@@ -45,13 +45,13 @@ const int AUTOLIST_SIZE = sizeof(autolist) / sizeof(auton_data);
 
 
 void run_selected_auton() {
-    if (selected_auto != 0) {
+    if (selected_auto >= 1 && selected_auto <= AUTOLIST_SIZE) {
         if (selected_section == 0){set_sorter_alliance(SorterAlliance::Red);}
         else if (selected_section == 1){set_sorter_alliance(SorterAlliance::Blue);}
         color_selected = true;
         FunctionPointer runfunc = autolist[selected_auto-1].func;
         runfunc();
-    }else if (selected_auto == 0){
+    }else {
         color_selected = false;
         auton_routes::unselected_auton_routine();
     }}

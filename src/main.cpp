@@ -28,7 +28,13 @@
 //         pros::lcd::print(0, "X: %.2f in", pose.x);
 //         pros::lcd::print(1, "Y: %.2f in", pose.y);
 //         pros::lcd::print(2, "H: %.2f deg", pose.theta);
+//         pros::lcd::print(0, "X: %.2f in", pose.x);
+//         pros::lcd::print(1, "Y: %.2f in", pose.y);
+//         pros::lcd::print(2, "H: %.2f deg", pose.theta);
 
+//         pros::delay(50); // update ~20 times/sec
+//     }
+// }
 //         pros::delay(50); // update ~20 times/sec
 //     }
 // }
@@ -42,6 +48,7 @@
 void initialize() {
   chassis.calibrate(); // calibrate sensors
   chassis.setPose(0,0,0); // set starting position (x, y, heading)
+  init_sorter_sensor();
   controller.rumble(".");
   init_sorter_sensor();
   pros::delay(500);
@@ -84,6 +91,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
+run_selected_auton();
 run_selected_auton();
 }
 /**

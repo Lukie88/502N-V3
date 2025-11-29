@@ -3,14 +3,14 @@
 #include <cmath>
 
 // ----- CONSTANTS (same as your RobotDrive) ----- //
-static const float CONTROLLER_THROTTLE_CURVE = 1.2f;
-static const float CONTROLLER_THROTTLE_DEADBAND = 3.0f;
+static const float CONTROLLER_THROTTLE_CURVE = 1.1f;
+static const float CONTROLLER_THROTTLE_DEADBAND = 2.0f;
 
 static const float CONTROLLER_TURN_CURVE = 1.4f;
-static const float CONTROLLER_TURN_DEADBAND = 3.0f;
+static const float CONTROLLER_TURN_DEADBAND = 2.0f;
 
 static const float CURVATHERP_INTERP_START = 2.0f;
-static const float CURVATHERP_INTERP_END   = 50.0f;
+static const float CURVATHERP_INTERP_END   = 45.0f;//changed frmo 50 to 45
 static const float CURVATHERP_TURN_COEFF   = 1.1f;
 
 // ----- SMALL HELPER FUNCTIONS ----- //

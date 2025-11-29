@@ -1,5 +1,4 @@
 #include "distance_relocalization.hpp"
-
 #include <cmath>
 
 namespace relocalize {

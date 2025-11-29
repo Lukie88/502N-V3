@@ -18,6 +18,8 @@ void initialize() {
   init_sorter_sensor();
   controller.rumble("."); // main systems calibrated
   init_sorter_sensor();
+
+  //calibrate gui
   pros::delay(500);
   brain_menu();
   pros::Task lvgl_handler(lvgl_task, NULL, "LVGL Handler");
@@ -73,11 +75,9 @@ void opcontrol() {
     }
 
 // A button — momentary pulse on Piston C (match load)
-if (controller.get_digital_new_press(DIGITAL_RIGHT)) {
- pistonload.toggle();}
+if (controller.get_digital_new_press(DIGITAL_RIGHT)) {pistonload.toggle();}
 
-if (controller.get_digital_new_press(DIGITAL_L2)) {
- pistonWing.toggle();}
+if (controller.get_digital_new_press(DIGITAL_L2)) {pistonWing.toggle();}
  pros::delay(20); 
 if (controller.get_digital_new_press(DIGITAL_A)) {
  pistonodom.toggle();}

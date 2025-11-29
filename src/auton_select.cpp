@@ -161,6 +161,7 @@ static void button_event_handler(lv_event_t * e) {
                 
                 if (sibling_btn != NULL) {
                     lv_obj_remove_state(sibling_btn, LV_STATE_CHECKED); 
+                    lv_label_set_text(sibling_btn, "Select");
                 }
             }
         }
@@ -226,8 +227,6 @@ static lv_obj_t * create_switch(lv_obj_t * parent, const char * icon, const char
 
     return obj;
 }
-
-
 
 
 

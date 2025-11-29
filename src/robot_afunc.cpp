@@ -55,51 +55,21 @@ int get_intake_target_speed() {
     // aligning with the sorter spec that checks for "> 0" before acting.
     return -lastTargets.main;
 }
-void stopIntakes() {
-    intakefunc(0, 0, 0);
-}
-
-void runIntakeStore(int duration_ms) {
-    runPreset(-600, 0, -600, duration_ms);
-}
-
-void runOuttake(int duration_ms) {
-    runPreset(600, 600, 600, duration_ms);
-}
-
+void stopIntakes() {intakefunc(0, 0, 0);}
+void runIntakeStore(int duration_ms) {runPreset(-600, 0, -600, duration_ms);}
+void runOuttake(int duration_ms) {runPreset(600, 600, 600, duration_ms);}
 void scoreMiddleGoal(int duration_ms) {
     //runPreset(600,600,600,400);
-    runPreset(-600, 600, -600, duration_ms);
-}
-
-void scoreHighGoal(int duration_ms) {
-    runPreset(-600, -600, -600, duration_ms);
-}
+    runPreset(-600, 600, -600, duration_ms);}
+void scoreHighGoal(int duration_ms) {runPreset(-600, -600, -600, duration_ms);}
 
 // === Pneumatic helpers ===
-void setWingDescore(bool extend) {
-    extendAndMaybeRetract(pistonWing, extend, 0);
-}
-
-void toggleWingDescore() {
-    pistonWing.toggle();
-}
-
-void pulseWingDescore(int duration_ms) {
-    extendAndMaybeRetract(pistonWing, true, duration_ms);
-}
-
-void setMatchLoad(bool extend) {
-    extendAndMaybeRetract(pistonload, extend, 0);
-}
-
-void toggleMatchLoad() {
-    pistonload.toggle();
-}
-
-void pulseMatchLoad(int duration_ms) {
-    extendAndMaybeRetract(pistonload, true, duration_ms);
-}
+void setWingDescore(bool extend) {extendAndMaybeRetract(pistonWing, extend, 0);}
+void toggleWingDescore() {pistonWing.toggle();}
+void pulseWingDescore(int duration_ms) {extendAndMaybeRetract(pistonWing, true, duration_ms);}
+void setMatchLoad(bool extend) {extendAndMaybeRetract(pistonload, extend, 0);}
+void toggleMatchLoad() {pistonload.toggle();}
+void pulseMatchLoad(int duration_ms) {extendAndMaybeRetract(pistonload, true, duration_ms);}
 
 // === Color sorter helpers ===
 bool sorterEnabled = true;

@@ -2,7 +2,7 @@
 #include "portconfig.hpp"
 #include <cmath>
 
-// ----- CONSTANTS (same as your RobotDrive) ----- //
+// ----- CONSTANTS ----- //
 static const float CONTROLLER_THROTTLE_CURVE = 1.1f;
 static const float CONTROLLER_THROTTLE_DEADBAND = 2.0f;
 
@@ -10,7 +10,7 @@ static const float CONTROLLER_TURN_CURVE = 1.4f;
 static const float CONTROLLER_TURN_DEADBAND = 2.0f;
 
 static const float CURVATHERP_INTERP_START = 2.0f;
-static const float CURVATHERP_INTERP_END   = 45.0f;//changed frmo 50 to 45
+static const float CURVATHERP_INTERP_END   = 45.0f;
 static const float CURVATHERP_TURN_COEFF   = 1.1f;
 
 // ----- SMALL HELPER FUNCTIONS ----- //
@@ -32,9 +32,9 @@ static float pilonCurve(int input, float maxInput, float exponent) {
     return sign * mag * maxInput; // back to -max..max
 }
 
-// ----- ARCADE MATH (optional) ----- //
+// ----- ARCADE MATH ----- //
 
-DriveOutput calc_ez_arcade(int throttle, int turn) {
+DriveOutput calc_arcade(int throttle, int turn) {
     // Deadband then curve inputs
     float curved_throttle = pilonCurve(deadband(throttle, CONTROLLER_THROTTLE_DEADBAND),
                                        127.0f, CONTROLLER_THROTTLE_CURVE);
@@ -103,7 +103,6 @@ constexpr double DRIVE_SCALE = 1.0; // tune later when needed
 
 return { static_cast<float>(leftPower  * 127.0 * DRIVE_SCALE),
          static_cast<float>(rightPower * 127.0 * DRIVE_SCALE) };
-
 }
 
 void drive_distance_inches(double inches, int speed) {

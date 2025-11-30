@@ -31,7 +31,10 @@ void disabled() {}
 
 void competition_initialize() {}
 
-void autonomous() {run_selected_auton();
+void autonomous() {
+
+  // run_selected_auton();
+  auton_routes::red_1();
 
 }
 

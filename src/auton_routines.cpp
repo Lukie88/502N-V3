@@ -11,6 +11,7 @@ namespace auton_routes {
 void red_1() {
 
 //RED LEFT SIDE AUTON
+imu_sensor.set_heading(90);
 chassis.setPose(-48,15,90);
 setWingDescore(true);
 runIntakeStore();

@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "502N V3_2",
+    "project_name": "502N autonselector2",
     "target": "v5",
     "templates": {
       "LemLib": {

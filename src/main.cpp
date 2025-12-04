@@ -31,12 +31,7 @@ void disabled() {}
 
 void competition_initialize() {}
 
-void autonomous() {
-
-  // run_selected_auton();
-  auton_routes::red_1();
-
-}
+void autonomous() {run_selected_auton();}
 
 void opcontrol() {
   controller.print(0, 0, "Clr:%-4s", sorter_alliance_name(get_sorter_alliance()));

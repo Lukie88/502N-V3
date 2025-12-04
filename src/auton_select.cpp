@@ -162,7 +162,7 @@ static void button_event_handler(lv_event_t * e) {
                 
                 if (sibling_btn != NULL) {
                     lv_obj_remove_state(sibling_btn, LV_STATE_CHECKED); 
-                    lv_label_set_text(sibling_btn, "Select");
+                    // lv_label_set_text(sibling_btn, "Select");
                 }
             }
         }

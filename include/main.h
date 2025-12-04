@@ -65,7 +65,7 @@ void autonomous(void);
 void initialize(void);
 void disabled(void);
 void competition_initialize(void);
-void intakefunc(int speedmain,int speedhalf1,int speedhalf2);
+// void intakefunc(int speedmain,int speedhalf1,int speedhalf2);
 void opcontrol(void);
 #ifdef __cplusplus
 }

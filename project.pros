@@ -636,7 +636,7 @@
     },
     "upload_options": {
       "icon": "pizza",
-      "slot": 1,
+      "slot": 3,
       "description": "Nov 29, 2025"
     },
     "use_early_access": false

@@ -15,13 +15,12 @@ inline pros::MotorGroup right_mg({-19, 17, 18}, pros::MotorGearset::blue); // 17
 
 inline lemlib::Drivetrain drivetrain(&left_mg, // left motor group
                               &right_mg, // right motor group
-                              11.4, // 10.5 inch track width
+                              11.4, // 11.4 inch track width
                               lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
                               450, // drivetrain rpm is 450
                               2 // horizontal drift is 2 (for now)
 );
 
-// --- Intake motors (renamed by role in comments) ---
 // 11W main intake
 inline pros::Motor intakeMain(9, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
 // Body 5.5W (formerly half intake 1)

@@ -173,7 +173,7 @@ static void rect_event_cb(lv_event_t *e)
         
         // Example action: Toggle the background color on click
         lv_color_t current_color = lv_obj_get_style_bg_color(obj, LV_PART_MAIN);
-        if (lv_color_compare(current_color, lv_color_hex(0x8B0000))) {
+        if (current_color == lv_color_hex(0x8B0000)) {
             // If it's red (clicked state), revert to blue
             lv_obj_set_style_bg_color(obj, lv_color_hex(0x3B82F6), LV_STATE_DEFAULT);
         } else {

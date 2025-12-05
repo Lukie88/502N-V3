@@ -21,4 +21,5 @@ namespace auton_routes {
 
     //unselected
     void unselected_auton_routine();
+    void tunepids();
 }

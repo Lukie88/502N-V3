@@ -15,7 +15,7 @@ inline pros::MotorGroup right_mg({-19, 17, 18}, pros::MotorGearset::blue); // 17
 
 inline lemlib::Drivetrain drivetrain(&left_mg, // left motor group
                               &right_mg, // right motor group
-                              11.4, // 11.4 inch track width
+                              11.375, // 11.375 inch track width
                               lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
                               450, // drivetrain rpm is 450
                               2 // horizontal drift is 2 (for now)
@@ -50,7 +50,7 @@ inline pros::Rotation vertical_sensor(-1);
 // horizontal tracking wheel
 inline lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_sensor, lemlib::Omniwheel::NEW_275_HALF, 2.85);
 // vertical tracking wheel
-inline lemlib::TrackingWheel vertical_tracking_wheel(&vertical_sensor, lemlib::Omniwheel::NEW_275_HALF,0.583);
+inline lemlib::TrackingWheel vertical_tracking_wheel(&vertical_sensor, lemlib::Omniwheel::NEW_275_HALF,0.6125);
 
 //Odometries
 inline lemlib::OdomSensors sensors(&vertical_tracking_wheel, // Primary vertical tracking wheel 
@@ -72,17 +72,18 @@ inline lemlib::ControllerSettings lateral_controller(5, // proportional gain (kP
                                               10 // maximum acceleration (slew)
 );
 
-// angular PID controller
-inline lemlib::ControllerSettings angular_controller(1.357, // proportional gain (kP)
-                                              0, // integral gain (kI)
-                                              10, // derivative gain (kD)
-                                              4, // anti windup
-                                              1, // small error range, in degrees
-                                              100, // small error range timeout, in milliseconds
-                                              4, // large error range, in degrees
-                                              750, // large error range timeout, in milliseconds
-                                              0 // maximum acceleration (slew)
+inline lemlib::ControllerSettings angular_controller(
+    .9,    // kP  (down from 2.0 to tame the first lunge)
+    0.0015,  // kI  (keep – it’s doing the steady-state cleanup)
+    10.0,    // kD  (up from 6.0 to add more braking near the target)
+    4,      // anti-windup
+    1.0,    // small error range (deg)
+    200,    // small error timeout (ms)
+    3,    // large error range (deg)
+    500,    // large error timeout (ms)
+    0      // slew (limits how fast output can change; was 0)
 );
+
 
 // create the chassis
 inline lemlib::Chassis chassis(drivetrain,                           // drivetrain settings

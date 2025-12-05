@@ -11,6 +11,8 @@
 #include "pros/rtos.hpp"
 #include "robot_afunc.hpp"
 
+bool debugmode = true;
+
 namespace {
 enum class BMacroState { Idle, OuttakeBurst, MiddleScore };
 
@@ -21,7 +23,7 @@ bool handleBMacro() {
 
     // --- timing constants ---
     constexpr uint32_t kOuttakeDurationMs      = 200;   // 0.2 s outtake
-    constexpr uint32_t kMiddleScoreDurationMs  = 2500;  // total 2.5 s scoring phase
+    constexpr uint32_t kMiddleScoreDurationMs  = 2800;  // total 2.5 s scoring phase
     constexpr uint32_t kMiddleScoreBoostMs     = 500;   // first 0.5 s at full speed
     constexpr uint32_t kMiddleScoreDecayEndMs  = 1500;  // at 1.5 s we reach "final" speed
     // last 0.5 s (3.0–3.5 s) will run at half of final speed
@@ -116,19 +118,34 @@ bool handleBMacro() {
 }
 }
 
+void poseDebugTask(void*) {
+    while (true) {
+        lemlib::Pose pose = chassis.getPose();
+        pros::lcd::print(0, "X: %.2f in", pose.x);
+        pros::lcd::print(1, "Y: %.2f in", pose.y);
+        pros::lcd::print(2, "H: %.2f deg", pose.theta);
+        pros::delay(50);
+    }
+}
 
 
 void initialize() {
+  
   chassis.calibrate(); // calibrate sensors
-  chassis.setPose(0,0,0); // set starting position (x, y, heading)
+  // chassis.setPose(-48,-14.8,180); // set starting position (x, y, heading)
   init_sorter_sensor();
   controller.rumble("."); // main systems calibrated
   init_sorter_sensor();
+  
 
-  //calibrate gui
+  if (debugmode) {
+    pros::lcd::initialize();
+    pros::Task poseDebug(poseDebugTask, nullptr, "Pose Debug Task");
+  } else{
   pros::delay(500);
   brain_menu();
   pros::Task lvgl_handler(lvgl_task, NULL, "LVGL Handler");
+  }
   controller.rumble(".-."); // gui operational
   pros::delay(20); // update every 20 ms
 }
@@ -139,7 +156,9 @@ void competition_initialize() {}
 
 void autonomous() {
 
-  run_selected_auton();
+  // run_selected_auton();
+  // auton_routes::skills_auton_routine();
+  auton_routes::tunepids();
 
 }
 
@@ -157,7 +176,14 @@ pistonWing.set_value(true);
   DriveOutput driveOut = calc_curvatherp(forward, turn);
   left_mg.move(static_cast<int>(driveOut.left));
   right_mg.move(static_cast<int>(driveOut.right));
-
+  // Periodically display odometry pose on the controller screen
+  static uint32_t lastPosePrint = 0;
+  const uint32_t now = pros::millis();
+  if (now - lastPosePrint >= 250) {
+      lemlib::Pose pose = chassis.getPose();
+      controller.print(2, 0, "X:%5.1f Y:%5.1f", pose.x, pose.y);
+      lastPosePrint = now;
+  }
 // --- Intake Controls ---
 
   bool macroRunning = handleBMacro();

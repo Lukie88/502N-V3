@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "502N V3_2",
+    "project_name": "Skills",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -635,8 +635,8 @@
       }
     },
     "upload_options": {
-      "icon": "pizza",
-      "slot": 3,
+      "icon": "alien",
+      "slot": 5,
       "description": "Nov 29, 2025"
     },
     "use_early_access": false

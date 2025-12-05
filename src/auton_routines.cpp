@@ -202,7 +202,7 @@ chassis.turnToHeading(0, 5000);
 
 void skills_auton_routine() {
   left_mg.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-    right_mg.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+  right_mg.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
   chassis.setPose(-48,-14.8,180);
   
   setWingDescore(true);
@@ -213,20 +213,20 @@ void skills_auton_routine() {
   pros::Task::delay(400);
   //Grab Matchload
   chassis.turnToHeading(270, 800, { .maxSpeed = 60 });
-    setMatchLoad(true);
+  setMatchLoad(true);
   chassis.moveToPose(-61.5, -47,270 , 1000, {.lead= 0.3,.maxSpeed=90, });
   pros::Task::delay(3500);
-chassis.waitUntilDone();
+  chassis.waitUntilDone();
 //   //Move away and turn to get ready to run
-chassis.moveToPoint(-44, -48, 1500, {.forwards = false,.maxSpeed = 80});  
+  chassis.moveToPoint(-44, -48, 1500, {.forwards = false,.maxSpeed = 80});  
   chassis.turnToHeading(180, 800, { .maxSpeed = 60 });
-setMatchLoad(false);
-chassis.moveToPoint(-45,-60,1000,{.maxSpeed=80});
+  setMatchLoad(false);
+  chassis.moveToPoint(-45,-60,1000,{.maxSpeed=80});
 
 //   //Move to other side of field
   chassis.turnToHeading(90, 1000, {.maxSpeed=70});
   chassis.moveToPoint(33, -63, 1700, {.maxSpeed=110});
- chassis.moveToPose(42, -47, 95, 3000, {.lead = 0.3,.maxSpeed = 80});
+  chassis.moveToPose(42, -47, 95, 3000, {.lead = 0.3,.maxSpeed = 80});
 //  chassis.moveToPose(26, -47, 90, 1000, {.lead = 0.3,.maxSpeed = 80});
 // pros::Task::delay(500);
 

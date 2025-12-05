@@ -73,7 +73,7 @@ inline lemlib::ControllerSettings lateral_controller(5, // proportional gain (kP
 );
 
 inline lemlib::ControllerSettings angular_controller(
-    .9,    // kP  (down from 2.0 to tame the first lunge)
+    1.74,    // kP  (down from 2.0 to tame the first lunge).
     0.0015,  // kI  (keep – it’s doing the steady-state cleanup)
     10.0,    // kD  (up from 6.0 to add more braking near the target)
     4,      // anti-windup

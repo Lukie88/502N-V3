@@ -133,7 +133,7 @@ void initialize() {
   
   chassis.calibrate(); // calibrate sensors
   // chassis.setPose(-48,-14.8,180); // set starting position (x, y, heading)
-  init_sorter_sensor();
+  // init_sorter_sensor();
   controller.rumble("."); // main systems calibrated
   init_sorter_sensor();
   
@@ -159,13 +159,14 @@ void competition_initialize() {}
 void autonomous() {
   // if (run_custom_auton == false){
   // if (tune_pids){auton_routes::tunepids();} 
-  // run_selected_auton();
-  auton_routes::skills_auton_routine();
+  run_selected_auton();
+  // auton_routes::skills_auton_routine();
   // else {auton_routes::skills_auton_routine();}//custom auton here
 }
 
 void opcontrol() {
   controller.print(0, 0, "Clr:%-4s", sorter_alliance_name(get_sorter_alliance()));
+   controller.print(1, 0, "Sort:%s ", sorterEnabled ? "ON" : "OFF");
   pistonodom.set_value(true); 
 pistonWing.set_value(true);
 
@@ -190,13 +191,14 @@ pistonWing.set_value(true);
 
   bool macroRunning = handleBMacro();
 
-  if (color_selected) {
-  if (controller.get_digital_new_press(DIGITAL_X)) {
+   // X cycles the alliance color when a match auton has been chosen; UP toggles
+  // color-sorting on/off for driver control.
+  if (color_selected && controller.get_digital_new_press(DIGITAL_X)) {
       cycle_sorter_alliance();
       controller.print(0, 0, "Clr:%-4s", sorter_alliance_name(get_sorter_alliance()));
-  }}
+  }
 
-  if (controller.get_digital_new_press(DIGITAL_B)) {
+  if (controller.get_digital_new_press(DIGITAL_UP)) {
       toggle_sorter_enabled();
       controller.print(1, 0, "Sort:%s ", sorterEnabled ? "ON" : "OFF");
   }

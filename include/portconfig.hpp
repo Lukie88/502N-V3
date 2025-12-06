@@ -18,7 +18,7 @@ inline lemlib::Drivetrain drivetrain(&left_mg, // left motor group
                               11.375, // 11.375 inch track width
                               lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
                               450, // drivetrain rpm is 450
-                              2 // horizontal drift is 2 (for now)
+                              4 // horizontal drift is 2 (for now)
 );
 
 // 11W main intake

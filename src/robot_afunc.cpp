@@ -3,6 +3,8 @@
 #include <cstdint>
 
 
+
+
 namespace {
 
 struct IntakeTargets {
@@ -56,9 +58,9 @@ int get_intake_target_speed() {
     return -lastTargets.main;
 }
 void stopIntakes() {intakefunc(0, 0, 0);}
-void runIntakeStore(int duration_ms) {runPreset(-300, 0, -300, duration_ms);}
+void runIntakeStore(int duration_ms) {runPreset(-600, 0, -600, duration_ms);}
 void runOuttake(int duration_ms) {runPreset(600, 600, 600, duration_ms);}
-void runlowscore(int duration_ms) {runPreset(600, 0, 600, duration_ms);}
+void runlowscore(int duration_ms) {runPreset(300, 0, 300, duration_ms);}
 void scoreMiddleGoal(int duration_ms) {
     //runPreset(600,600,600,400);
     runPreset(-600, 600, -600, duration_ms);}
@@ -73,15 +75,13 @@ void toggleMatchLoad() {pistonload.toggle();}
 void pulseMatchLoad(int duration_ms) {extendAndMaybeRetract(pistonload, true, duration_ms);}
 
 // === Color sorter helpers ===
-bool sorterEnabled = true;
+bool sorterEnabled = false;
 
 namespace {
 SorterAlliance currentAlliance = SorterAlliance::None;
 bool sorterSensorReady = false;
 
 enum class RingColor { None, Red, Blue };
-
-static uint32_t highDumpUntilMs = 0;
 
 RingColor alliance_to_ring(SorterAlliance alliance) {
     switch (alliance) {
@@ -93,24 +93,25 @@ RingColor alliance_to_ring(SorterAlliance alliance) {
             return RingColor::None;
     }
 }
+const char* ring_color_name(RingColor color) {
+    switch (color) {
+        case RingColor::Red:
+            return "Red";
+        case RingColor::Blue:
+            return "Blue";
+        default:
+            return "None";
+    }
+}
 
 RingColor detect_ring_color() {
-    // pros::c::optical_rgb_s_t rgb = sorterOptical.get_rgb();
-    // int total = rgb.red + rgb.green + rgb.blue;
-
-    
-    // if (total < 90) {
-        if (sorterOptical.get_proximity() < 10) {
-
+    // Ignore readings when nothing is close enough to the sensor.
+    if (sorterOptical.get_proximity() < 10) {
         return RingColor::None;
     }
 
-    // double redRatio = static_cast<double>(rgb.red) / total;
-    // double blueRatio = static_cast<double>(rgb.blue) / total;
-    // double ratioDelta = redRatio - blueRatio;
+    // Hue gives a more reliable indication of ring color than raw RGB ratios
 
-    // if (ratioDelta >= 0.12) {
-     // Hue gives a more reliable indication of ring color than raw RGB ratios
     double hue = sorterOptical.get_hue();
 
     // Treat wrap-around near 0/360 as "red"
@@ -127,7 +128,16 @@ RingColor detect_ring_color() {
 
     return RingColor::None;
 }
+bool is_alliance_color(RingColor observed) {
+    return observed != RingColor::None && observed == alliance_to_ring(currentAlliance);
+}
 
+void log_sorter_decision(RingColor observed, const char* action) {
+    if (!pros::lcd::is_initialized()) return;
+
+    pros::lcd::print(5, "Hue:%5.1f Obs:%s", sorterOptical.get_hue(), ring_color_name(observed));
+    pros::lcd::print(6, "Sorter action: %s", action);
+}
 void apply_preset(SorterRequest request) {
     if (request == SorterRequest::HighGoal) {
         scoreHighGoal();
@@ -182,28 +192,40 @@ void toggle_sorter_enabled() { set_sorter_enabled(!sorterEnabled); }
 void run_color_sorter(SorterRequest request) {
     bool sorterActive = sorterEnabled && team_assigned();
 
-    SorterRequest desiredRequest = request;
-
-    if (sorterActive) {
+ // Only gate high-goal scoring with the color sensor; middle-goal scoring
+    // is always allowed. Hue windows: red < 30° or > 330°, blue 170–250°.
+    // Wrong color → outtake, correct color → feed high goal, unknown → keep
+    // storing until a confident read arrives.
+    if (sorterActive && request == SorterRequest::HighGoal) {
         RingColor observed = detect_ring_color();
         RingColor targetColor = alliance_to_ring(currentAlliance);
-        bool matchesAlliance = observed != RingColor::None && observed == targetColor;
+        bool matchesAlliance = is_alliance_color(observed);
         bool wrongColor = observed != RingColor::None && observed != targetColor;
 
         if (wrongColor) {
-            desiredRequest = (request == SorterRequest::HighGoal) ? SorterRequest::MiddleGoal
-                                                                 : SorterRequest::HighGoal;
-        } else if (!matchesAlliance) {
-            desiredRequest = request;
+            log_sorter_decision(observed, "Rejecting (outtake)");
+            runOuttake();
+            return;
         }
+
+        if (matchesAlliance) {
+            log_sorter_decision(observed, "Scoring high goal");
+            scoreHighGoal();
+            return;
+        }
+
+        // Unknown color – keep storing until we have a confident read.
+        log_sorter_decision(observed, "Storing (no read)");
+        runIntakeStore();
+        return;
     }
 
-    apply_preset(desiredRequest);
+    apply_preset(request);
 }
 
 void init_sorter_sensor() {
-    sorterOptical.set_led_pwm(100);
     sorterOptical.set_integration_time(50);
     pros::delay(75);
     sorterSensorReady = true;
+    set_sorter_enabled(sorterEnabled);
 }

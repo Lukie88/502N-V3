@@ -252,7 +252,7 @@ void skills_auton_routine() {
 //   //Move to other side of field
   chassis.turnToHeading(90, 1000, {.maxSpeed=70});
   chassis.moveToPoint(33, -65, 1700, {.maxSpeed=110});
-  chassis.moveToPose(42, -52, 90, 2000, {.lead = 0.1,.maxSpeed = 80}); 
+  chassis.moveToPose(42, -52, 90, 1000, {.lead = 0.1,.maxSpeed = 80}); 
   chassis.moveToPose(18, -52, 87, 2000, {.forwards=false,.lead = 0.1,.maxSpeed = 80}); 
   pros::Task::delay(1000);
   scoreHighGoal();
@@ -261,7 +261,7 @@ void skills_auton_routine() {
 
 //   //Intake Second Matchloaders
  chassis.setPose(26,-52,90);
-  chassis.moveToPose(43, -51,90 ,1500, {.lead= 0.1,.maxSpeed=127});
+  chassis.moveToPose(43, -51,90 ,1000, {.lead= 0.1,.maxSpeed=127});
     runIntakeStore();
   setMatchLoad(true);
   chassis.turnToHeading(90,1000);
@@ -315,10 +315,10 @@ void skills_auton_routine() {
  
   runIntakeStore();
   chassis.setPose(-23,52,-90);
-  chassis.moveToPose(-40, 52,-90 , 2000, {.lead= 0.1,.maxSpeed=127});
-  chassis.moveToPose(-40,10,180,2000,{.lead=0.1,.maxSpeed=127});
-  chassis.turnToHeading(90, 1000);
-  chassis.moveToPose(-70,10,90,3000,{.forwards=false,.lead=0.1,.maxSpeed=127});
+  chassis.moveToPose(-40, 52,-90 ,1500, {.lead= 0.1,.maxSpeed=127});
+  chassis.moveToPose(-34,5,180,1500,{.lead=0.1,.maxSpeed=127});
+  chassis.turnToHeading(-90, 1000);
+  chassis.moveToPose(-70,5,-90,3000,{.lead=0.1,.maxSpeed=127,.minSpeed=75});
 
 
   

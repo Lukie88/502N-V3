@@ -2,6 +2,7 @@
 #include "main_drive.hpp"
 #include "portconfig.hpp"
 #include "lemlib/api.hpp"
+#include "pros/motors.h"
 #include "robot_afunc.hpp"
 
 namespace auton_routes {
@@ -42,7 +43,7 @@ chassis.moveToPose(-20.2, 49, -90, 3000,{.forwards=false, .maxSpeed=127, .minSpe
 pros::delay(500);
 setMatchLoad(false);
 pros::delay(1500);
-scoreHighGoal();
+run_color_sorter(SorterRequest::HighGoal);
 pros::Task::delay(1500);
 stopIntakes();
 
@@ -51,12 +52,15 @@ stopIntakes();
 void red_2() {
 
 //RED RIGHT SIDE AUTON
+ left_mg.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+  right_mg.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 chassis.setPose(-48, -15, 90);
 setWingDescore(true);
 runIntakeStore();
 
-chassis.moveToPose(-20, -25, 110, 2000, {.lead = 0.3, .maxSpeed = 90.0, .minSpeed = 25.0}, true);
+chassis.moveToPose(-20, -25, 110, 2000, {.lead = 0.5, .maxSpeed = 90.0, .minSpeed = 25.0}, true);
 chassis.waitUntilDone();
+pros::Task::delay(200);
 
 setMatchLoad(true); // grab 3 balls
 pros::Task::delay(1200);
@@ -69,29 +73,30 @@ stopIntakes();
 pros::delay(500);
 runOuttake();
 pros::Task::delay(100);
-runOuttake();
+runlowscore();
 pros::delay(2000);
 stopIntakes();
 pros::Task::delay(200);
 
-chassis.moveToPose(-38, -46, 45, 2200, {.forwards=false,.lead = 0.1, .maxSpeed = 100});
+chassis.moveToPose(-38, -46, 45, 2000, {.forwards=false,.lead = 0.1, .maxSpeed = 100});
 chassis.turnToHeading(-80,1000);
 
-chassis.moveToPose(-61, -46, 270, 2000, {.lead = 0.1, .maxSpeed = 110});//changed to -90 from -80
+chassis.moveToPose(-61, -46, 270, 3000, {.lead = 0.1, .maxSpeed = 110});//changed to -90 from -80
 
 setMatchLoad(true);
 runIntakeStore();
-pros::delay(1500);
+pros::delay(2500);
 
 chassis.moveToPose(-10, -48, -90, 3000, {.forwards = false, .maxSpeed = 127, .minSpeed = 40});
 
 pros::delay(500);
 setMatchLoad(false);
 pros::delay(1500);
-scoreHighGoal();
-pros::Task::delay(750);
-stopIntakes();
-
+run_color_sorter(SorterRequest::HighGoal);
+ left_mg.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+  right_mg.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+  pros::Task::delay(1500);
+  runIntakeStore2();
 }
 
 void red_3() {
@@ -133,7 +138,7 @@ chassis.moveToPose(-10, 49, -90, 3000,{.forwards=false, .maxSpeed=127, .minSpeed
 pros::delay(500);
 setMatchLoad(false);
 pros::delay(1500);
-scoreHighGoal();
+run_color_sorter(SorterRequest::HighGoal);
 pros::Task::delay(1500);
 stopIntakes();
 }
@@ -141,6 +146,7 @@ stopIntakes();
 void blue_2() {
 
 //BLUE RIGHT SIDE AUTON  
+
 chassis.setPose(-48, -15, 90);
 setWingDescore(true);
 runIntakeStore();
@@ -157,7 +163,7 @@ chassis.moveToPose(-8, -8, -135, 2000, {.forwards = false, .lead = 0.1, .maxSpee
 pros::delay(1000);
 stopIntakes();
 pros::delay(500);
-runOuttake();
+runlowscore();
 pros::Task::delay(100);
 runOuttake();
 pros::delay(1000);
@@ -177,13 +183,14 @@ chassis.moveToPose(-10, -49, -90, 3000, {.forwards = false, .maxSpeed = 127, .mi
 pros::delay(500);
 setMatchLoad(false);
 pros::delay(1500);
-scoreHighGoal();
-pros::Task::delay(1500);
-stopIntakes();
+run_color_sorter(SorterRequest::HighGoal);
+pros::Task::delay(2000);
 }
 
 void blue_3() {
 //BLUE AWP AUTON   
+drive_distance_inches(10);
+
 }
 
 void tunepids(){

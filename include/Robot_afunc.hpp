@@ -14,7 +14,7 @@ void runIntakeStore(int duration_ms = 0);
 void runOuttake(int duration_ms = 0);
 void scoreMiddleGoal(int duration_ms = 0);
 void scoreHighGoal(int duration_ms = 0);
-
+void runlowscore(int duration_ms = 0);
 // === Pneumatic helpers ===
 // "Wing" refers to the L2 descore piston, and "match load" to the right-arrow
 // downward actuator.

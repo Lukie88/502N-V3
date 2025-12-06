@@ -58,6 +58,7 @@ int get_intake_target_speed() {
 void stopIntakes() {intakefunc(0, 0, 0);}
 void runIntakeStore(int duration_ms) {runPreset(-600, 0, -600, duration_ms);}
 void runOuttake(int duration_ms) {runPreset(600, 600, 600, duration_ms);}
+void runlowscore(int duration_ms) {runPreset(600, 0, 600, duration_ms);}
 void scoreMiddleGoal(int duration_ms) {
     //runPreset(600,600,600,400);
     runPreset(-600, 600, -600, duration_ms);}

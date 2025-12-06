@@ -11,14 +11,8 @@
 #include "pros/rtos.hpp"
 #include "robot_afunc.hpp"
 
-<<<<<<< HEAD
 bool debugmode = false; //was true
 
-=======
-bool debugmode = false;
-bool tune_pids = false;
-bool run_custom_auton = true;
->>>>>>> a7287c717b56c5e29cb65f332c886f1eaedd3db2
 namespace {
 enum class BMacroState { Idle, OuttakeBurst, MiddleScore };
 
@@ -163,10 +157,10 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-  if (run_custom_auton == false){
-  if (tune_pids){auton_routes::tunepids();} 
-  else {run_selected_auton();}}
-  else {auton_routes::skills_auton_routine();}//custom auton here
+  // if (run_custom_auton == false){
+  // if (tune_pids){auton_routes::tunepids();} 
+  run_selected_auton();
+  // else {auton_routes::skills_auton_routine();}//custom auton here
 }
 
 void opcontrol() {

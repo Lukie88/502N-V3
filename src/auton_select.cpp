@@ -46,13 +46,22 @@ const int AUTOLIST_SIZE = sizeof(autolist) / sizeof(auton_data);
 
 void run_selected_auton() {
     if (selected_auto >= 1 && selected_auto <= AUTOLIST_SIZE) {
-        if (selected_section == 0){set_sorter_alliance(SorterAlliance::Red);}
-        else if (selected_section == 1){set_sorter_alliance(SorterAlliance::Blue);}
-        color_selected = true;
+      selected_section = autolist[selected_auto - 1].catagory;
+        bool matchAutoSelected = selected_section == 0 || selected_section == 1;
+        if (matchAutoSelected) {
+            set_sorter_alliance(selected_section == 0 ? SorterAlliance::Red : SorterAlliance::Blue);
+        }
+        color_selected = matchAutoSelected;
+        set_sorter_enabled(matchAutoSelected);
+        if (!matchAutoSelected) {
+            set_sorter_alliance(SorterAlliance::None);
+        }
         FunctionPointer runfunc = autolist[selected_auto-1].func;
         runfunc();
     }else {
         color_selected = false;
+         set_sorter_alliance(SorterAlliance::None);
+        set_sorter_enabled(false);
         auton_routes::unselected_auton_routine();
     }}
 

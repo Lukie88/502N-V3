@@ -38,7 +38,7 @@ inline pros::adi::Pneumatics pistonWing('D', false); // wing / downward mechanis
 inline pros::adi::Pneumatics pistonodom('B', false); // match-load / downward mechanism
 
 // Optical Sensors
-inline pros::Optical sorterOptical(12);
+inline pros::Optical sorterOptical(14);
 
 // Inertial Sensor
 inline pros::Imu imu_sensor(15);

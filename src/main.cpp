@@ -11,7 +11,7 @@
 #include "pros/rtos.hpp"
 #include "robot_afunc.hpp"
 
-bool debugmode = true;
+bool debugmode = false; //was true
 
 namespace {
 enum class BMacroState { Idle, OuttakeBurst, MiddleScore };
@@ -140,6 +140,8 @@ void initialize() {
 
   if (debugmode) {
     pros::lcd::initialize();
+      pros::delay(500);
+
     pros::Task poseDebug(poseDebugTask, nullptr, "Pose Debug Task");
   } else{
   pros::delay(500);

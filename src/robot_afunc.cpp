@@ -56,7 +56,7 @@ int get_intake_target_speed() {
     return -lastTargets.main;
 }
 void stopIntakes() {intakefunc(0, 0, 0);}
-void runIntakeStore(int duration_ms) {runPreset(-600, 0, -600, duration_ms);}
+void runIntakeStore(int duration_ms) {runPreset(-300, 0, -300, duration_ms);}
 void runOuttake(int duration_ms) {runPreset(600, 600, 600, duration_ms);}
 void runlowscore(int duration_ms) {runPreset(600, 0, 600, duration_ms);}
 void scoreMiddleGoal(int duration_ms) {
@@ -95,23 +95,33 @@ RingColor alliance_to_ring(SorterAlliance alliance) {
 }
 
 RingColor detect_ring_color() {
-    pros::c::optical_rgb_s_t rgb = sorterOptical.get_rgb();
-    int total = rgb.red + rgb.green + rgb.blue;
+    // pros::c::optical_rgb_s_t rgb = sorterOptical.get_rgb();
+    // int total = rgb.red + rgb.green + rgb.blue;
 
     
-    if (total < 90) {
+    // if (total < 90) {
+        if (sorterOptical.get_proximity() < 10) {
+
         return RingColor::None;
     }
 
-    double redRatio = static_cast<double>(rgb.red) / total;
-    double blueRatio = static_cast<double>(rgb.blue) / total;
-    double ratioDelta = redRatio - blueRatio;
+    // double redRatio = static_cast<double>(rgb.red) / total;
+    // double blueRatio = static_cast<double>(rgb.blue) / total;
+    // double ratioDelta = redRatio - blueRatio;
 
-    if (ratioDelta >= 0.12) {
+    // if (ratioDelta >= 0.12) {
+     // Hue gives a more reliable indication of ring color than raw RGB ratios
+    double hue = sorterOptical.get_hue();
+
+    // Treat wrap-around near 0/360 as "red"
+    bool looksRed = (hue < 30.0) || (hue > 330.0);
+    bool looksBlue = (hue > 170.0 && hue < 250.0);
+
+    if (looksRed && !looksBlue) {
         return RingColor::Red;
     }
 
-    if (ratioDelta <= -0.12) {
+    if (looksBlue && !looksRed) {
         return RingColor::Blue;
     }
 
@@ -192,7 +202,8 @@ void run_color_sorter(SorterRequest request) {
 }
 
 void init_sorter_sensor() {
-    sorterOptical.set_led_pwm(90);
+    sorterOptical.set_led_pwm(100);
     sorterOptical.set_integration_time(50);
+    pros::delay(75);
     sorterSensorReady = true;
 }

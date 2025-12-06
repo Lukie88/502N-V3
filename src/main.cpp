@@ -141,7 +141,7 @@ void initialize() {
   if (debugmode) {
     pros::lcd::initialize();
       pros::delay(500);
-
+void init_sorter_sensor();
     pros::Task poseDebug(poseDebugTask, nullptr, "Pose Debug Task");
   } else{
   pros::delay(500);
@@ -159,7 +159,8 @@ void competition_initialize() {}
 void autonomous() {
   // if (run_custom_auton == false){
   // if (tune_pids){auton_routes::tunepids();} 
-  run_selected_auton();
+  // run_selected_auton();
+  auton_routes::skills_auton_routine();
   // else {auton_routes::skills_auton_routine();}//custom auton here
 }
 

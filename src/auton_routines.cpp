@@ -96,7 +96,7 @@ run_color_sorter(SorterRequest::HighGoal);
  left_mg.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
   right_mg.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
   pros::Task::delay(1500);
-  runIntakeStore2();
+  runIntakeStore();
 }
 
 void red_3() {
